@@ -1,59 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# IELTS Topic Web
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Ứng dụng Laravel luyện chủ đề IELTS, từ vựng, tra từ điển và làm bài luyện tập theo cấp độ.
 
-## About Laravel
+## Chức năng chính
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Xem danh sách chủ đề IELTS và nội dung gợi ý luyện Speaking/Writing.
+- Tra cứu từ vựng IELTS, flashcard và quiz nhanh.
+- Tra từ điển từ dữ liệu Open English WordNet 2025, có lưu lịch sử khi đăng nhập.
+- Luyện bài theo 6 cấp độ: vocabulary, grammar, sentence role, definition, spelling, example completion, IELTS format và các dạng skill practice.
+- Lưu lịch sử làm bài, điểm số, lỗi sai và từ đã tra cho tài khoản đăng nhập.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Yêu cầu
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2+
+- Composer
+- Node.js 20+ và npm
+- SQLite hoặc database khác được Laravel hỗ trợ
 
-## Learning Laravel
+## Cài đặt local
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Nếu dùng SQLite, tạo file database:
 
-## Laravel Sponsors
+```bash
+touch database/database.sqlite
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Trên PowerShell có thể dùng:
 
-### Premium Partners
+```powershell
+New-Item -Path database\database.sqlite -ItemType File -Force
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Sau đó migrate và seed dữ liệu:
 
-## Contributing
+```bash
+php artisan migrate --seed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Nếu muốn dùng form dịch giống Google Dịch trên trang từ điển, bật Cloud Translation API trong Google Cloud rồi điền key vào `.env`:
 
-## Code of Conduct
+```env
+GOOGLE_TRANSLATE_API_KEY=your-google-cloud-api-key
+GOOGLE_TRANSLATE_ENDPOINT=https://translation.googleapis.com/language/translate/v2
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Build asset hoặc chạy Vite:
 
-## Security Vulnerabilities
+```bash
+npm run build
+# hoặc
+npm run dev
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Chạy server Laravel:
 
-## License
+```bash
+php artisan serve
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Mặc định app chạy tại `http://127.0.0.1:8000`.
+
+## Chạy test
+
+```bash
+composer test
+```
+
+Hoặc chạy trực tiếp:
+
+```bash
+php artisan test
+```
+
+`phpunit.xml` đã cấu hình database SQLite in-memory cho môi trường test.
+
+## Dữ liệu seed
+
+- `TopicSeeder`: dữ liệu chủ đề IELTS.
+- `VocabularySeeder`: bộ từ vựng chọn lọc.
+- `DictionaryEntrySeeder`: đọc dữ liệu WordNet trong `database/seeders/data/oewn2025`.
+
+Seeder từ điển có fallback nghĩa tiếng Việt từ bảng `vocabularies`; các từ chưa có bản dịch sẽ hiển thị giải thích tiếng Anh kèm nhãn loại từ.
+
+## Lỗi thường gặp
+
+- `vendor/autoload.php` không tồn tại: chạy `composer install`.
+- `vite is not recognized`: chạy `npm install`.
+- Không có SQLite database: tạo `database/database.sqlite`, sau đó chạy `php artisan migrate --seed`.
+- Git báo `dubious ownership`: thêm safe directory cho repo:
+
+```bash
+git config --global --add safe.directory D:/ielts-topic-web
+```
+
+## Scripts hữu ích
+
+```bash
+composer test
+npm run build
+npm run dev
+php artisan migrate:fresh --seed
+```

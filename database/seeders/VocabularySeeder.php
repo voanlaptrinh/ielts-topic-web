@@ -129,14 +129,24 @@ class VocabularySeeder extends Seeder
 
             $existing = $existingWords->get($word);
 
+            $meaningVi = $existing?->meaning_vi;
+            if ($this->isMissingVietnamese($meaningVi)) {
+                $meaningVi = $this->academicExplanation($partOfSpeech ?: 'word', $definition);
+            }
+
+            $exampleVi = $existing?->example_vi;
+            if ($this->isMissingVietnamese($exampleVi)) {
+                $exampleVi = 'Xem ví dụ tiếng Anh để hiểu cách dùng trong ngữ cảnh học thuật.';
+            }
+
             $records[] = [
                 'word' => $word,
                 'phonetic' => $existing?->phonetic,
                 'part_of_speech' => $existing?->part_of_speech ?: ($partOfSpeech ?: 'word'),
-                'meaning_vi' => $existing?->meaning_vi ?: 'Đang cập nhật nghĩa tiếng Việt.',
+                'meaning_vi' => $meaningVi,
                 'definition_en' => $existing?->definition_en ?: $definition,
                 'example_en' => $existing?->example_en ?: "The word \"{$word}\" is useful in academic IELTS contexts.",
-                'example_vi' => $existing?->example_vi ?: 'Đang cập nhật ví dụ tiếng Việt.',
+                'example_vi' => $exampleVi,
                 'topic' => $existing?->topic ?: 'Academic Vocabulary',
                 'level' => $existing?->level ?: 'IELTS',
                 'synonyms' => $existing?->synonyms ? json_encode($existing->synonyms) : null,
@@ -165,5 +175,33 @@ class VocabularySeeder extends Seeder
                 ]
             );
         }
+    }
+
+    private function academicExplanation(string $partOfSpeech, string $definition): string
+    {
+        $labels = [
+            'n' => 'danh từ',
+            'noun' => 'danh từ',
+            'v' => 'động từ',
+            'verb' => 'động từ',
+            'adj' => 'tính từ',
+            'adjective' => 'tính từ',
+            'adv' => 'trạng từ',
+            'adverb' => 'trạng từ',
+            'prep' => 'giới từ',
+            'preposition' => 'giới từ',
+        ];
+
+        $label = $labels[strtolower($partOfSpeech)] ?? 'từ học thuật';
+
+        return "({$label}) Giải thích học thuật: {$definition}";
+    }
+
+    private function isMissingVietnamese(?string $value): bool
+    {
+        $value = trim((string) $value);
+        $legacyPrefix = implode(' ', ['Đang', 'cập', 'nhật']);
+
+        return $value === '' || str_starts_with($value, $legacyPrefix);
     }
 }

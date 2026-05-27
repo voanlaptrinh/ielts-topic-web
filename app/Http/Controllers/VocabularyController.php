@@ -10,33 +10,12 @@ class VocabularyController extends Controller
 {
     public function index(Request $request)
     {
-        $search = trim((string) $request->query('q'));
-        $level = trim((string) $request->query('level'));
-        $topic = trim((string) $request->query('topic'));
+        return view('vocabularies.index', $this->searchData($request));
+    }
 
-        $words = Vocabulary::query()
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('word', 'like', "%{$search}%")
-                        ->orWhere('meaning_vi', 'like', "%{$search}%")
-                        ->orWhere('definition_en', 'like', "%{$search}%")
-                        ->orWhere('topic', 'like', "%{$search}%");
-                });
-            })
-            ->when($level, fn ($query) => $query->where('level', $level))
-            ->when($topic, fn ($query) => $query->where('topic', $topic))
-            ->orderBy('word')
-            ->paginate(30)
-            ->withQueryString();
-
-        return view('vocabularies.index', [
-            'words' => $words,
-            'search' => $search,
-            'selectedLevel' => $level,
-            'selectedTopic' => $topic,
-            'levels' => Vocabulary::select('level')->distinct()->orderBy('level')->pluck('level'),
-            'topics' => Vocabulary::select('topic')->whereNotNull('topic')->distinct()->orderBy('topic')->pluck('topic'),
-        ]);
+    public function search(Request $request)
+    {
+        return view('vocabularies._results', $this->searchData($request));
     }
 
     public function show(string $word)
@@ -114,13 +93,11 @@ class VocabularyController extends Controller
     private function quizQuestions()
     {
         $words = Vocabulary::query()
-            ->where('meaning_vi', 'not like', 'Đang cập nhật%')
             ->inRandomOrder()
             ->take(5)
             ->get();
 
         $allMeanings = Vocabulary::query()
-            ->where('meaning_vi', 'not like', 'Đang cập nhật%')
             ->pluck('meaning_vi')
             ->all();
 
@@ -135,5 +112,67 @@ class VocabularyController extends Controller
                 'options' => $wrongAnswers->push($word->meaning_vi)->shuffle()->values(),
             ];
         });
+    }
+
+    private function searchData(Request $request): array
+    {
+        $search = $this->normalizeSearch((string) $request->query('q'));
+        $activeTopic = trim((string) $request->query('topic'));
+
+        $words = Vocabulary::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('word', 'like', "{$search}%")
+                        ->orWhere('word', 'like', "%{$search}%")
+                        ->orWhere('meaning_vi', 'like', "%{$search}%")
+                        ->orWhere('definition_en', 'like', "%{$search}%")
+                        ->orWhere('example_en', 'like', "%{$search}%")
+                        ->orWhere('topic', 'like', "%{$search}%");
+                });
+            })
+            ->when($search, fn ($query) => $query->orderByRaw(
+                'CASE WHEN LOWER(word) = ? THEN 0 WHEN LOWER(word) LIKE ? THEN 1 ELSE 2 END',
+                [mb_strtolower($search), mb_strtolower($search) . '%']
+            ))
+            ->orderBy('word')
+            ->paginate(24)
+            ->withQueryString();
+
+        $featuredWord = $search ? $words->first() : null;
+        $topicGroups = Vocabulary::query()
+            ->selectRaw('topic, COUNT(*) as total')
+            ->whereNotNull('topic')
+            ->groupBy('topic')
+            ->orderByDesc('total')
+            ->orderBy('topic')
+            ->get();
+
+        if ($activeTopic === '' || ! $topicGroups->contains('topic', $activeTopic)) {
+            $activeTopic = (string) ($topicGroups->first()?->topic ?? '');
+        }
+
+        $topicWords = $activeTopic === ''
+            ? collect()
+            : Vocabulary::where('topic', $activeTopic)
+                ->orderBy('word')
+                ->get();
+
+        return [
+            'words' => $words,
+            'featuredWord' => $featuredWord,
+            'search' => $search,
+            'topicGroups' => $topicGroups,
+            'activeTopic' => $activeTopic,
+            'topicWords' => $topicWords,
+        ];
+    }
+
+    private function normalizeSearch(string $value): string
+    {
+        $value = str_replace(['_', '-'], ' ', $value);
+        $value = preg_replace('/[^\pL\pN\s\']+/u', ' ', $value) ?? $value;
+        $value = preg_replace('/\s+/u', ' ', $value) ?? $value;
+
+        return trim($value);
     }
 }

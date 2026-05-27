@@ -22,12 +22,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 Route::get('/history', [HistoryController::class, 'index'])->middleware('auth')->name('history.index');
 
 Route::get('/vocabulary', [VocabularyController::class, 'index'])->name('vocabularies.index');
+Route::get('/vocabulary/search', [VocabularyController::class, 'search'])->name('vocabularies.search');
 Route::get('/vocabulary/flashcards', [VocabularyController::class, 'flashcards'])->name('vocabularies.flashcards');
 Route::get('/vocabulary/quiz', [VocabularyController::class, 'quiz'])->name('vocabularies.quiz');
 Route::post('/vocabulary/quiz', [VocabularyController::class, 'submitQuiz'])->name('vocabularies.quiz.submit');
 Route::get('/vocabulary/{word}', [VocabularyController::class, 'show'])->name('vocabularies.show');
 
 Route::get('/dictionary', [DictionaryController::class, 'index'])->name('dictionary.index');
+Route::get('/dictionary/search', [DictionaryController::class, 'search'])->name('dictionary.search');
+Route::post('/dictionary/translate', [DictionaryController::class, 'translate'])->name('dictionary.translate');
 Route::get('/dictionary/{word}', [DictionaryController::class, 'show'])->name('dictionary.show');
 
 Route::get('/tests', [PracticeTestController::class, 'index'])->name('tests.index');

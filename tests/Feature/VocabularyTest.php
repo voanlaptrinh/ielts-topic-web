@@ -16,7 +16,7 @@ class VocabularyTest extends TestCase
     {
         $this->seed(VocabularySeeder::class);
 
-        $this->get('/vocabulary')->assertOk()->assertSee('Từ điển IELTS miễn phí');
+        $this->get('/vocabulary')->assertOk()->assertSee('Tra từ vựng IELTS theo kiểu nhanh');
         $this->get('/vocabulary/flashcards')->assertOk()->assertSee('Ôn từ bằng flashcard');
         $this->get('/vocabulary/quiz')->assertOk()->assertSee('Làm quiz từ vựng IELTS');
         $this->get('/vocabulary/sustainable')->assertOk()->assertSee('bền vững');
@@ -30,6 +30,34 @@ class VocabularyTest extends TestCase
             ->assertOk()
             ->assertSee('allocate')
             ->assertSee('beneficial');
+    }
+
+    public function test_users_can_review_vocabulary_by_topic(): void
+    {
+        $this->seed(VocabularySeeder::class);
+
+        $this->get('/vocabulary?topic=Education')
+            ->assertOk()
+            ->assertSee('Ôn theo lĩnh vực')
+            ->assertSee('Ôn từ theo topic')
+            ->assertSee('Nhập từ tiếng Anh')
+            ->assertSee('Kiểm tra')
+            ->assertSee('Education')
+            ->assertSee('allocate')
+            ->assertSee('beneficial');
+    }
+
+    public function test_vocabulary_live_search_returns_results_partial(): void
+    {
+        $this->seed(VocabularySeeder::class);
+
+        $this->get('/vocabulary/search?q=sustainable', [
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])
+            ->assertOk()
+            ->assertSee('Kết quả phù hợp nhất')
+            ->assertSee('sustainable')
+            ->assertDontSee('<html', false);
     }
 
     public function test_vocabulary_quiz_submission_is_scored_and_shows_wrong_answers(): void

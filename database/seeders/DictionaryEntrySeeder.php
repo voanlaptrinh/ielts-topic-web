@@ -63,6 +63,8 @@ class DictionaryEntrySeeder extends Seeder
         if ($records !== []) {
             $this->upsert($records);
         }
+
+        $this->upsertVocabularyEntries($now);
     }
 
     private function parseLine(string $line, string $partOfSpeech, $timestamp, $vietnameseMeanings): array
@@ -152,11 +154,47 @@ class DictionaryEntrySeeder extends Seeder
         );
     }
 
+    private function upsertVocabularyEntries($timestamp): void
+    {
+        $records = Vocabulary::query()
+            ->orderBy('id')
+            ->get()
+            ->map(function (Vocabulary $word) use ($timestamp) {
+                $definitionVi = $word->meaning_vi;
+                if ($this->isMissingVietnamese($definitionVi)) {
+                    $definitionVi = $this->makeVietnameseContext($word->word, $word->part_of_speech, $word->definition_en, collect());
+                }
+
+                return [
+                    'word' => $word->word,
+                    'normalized_word' => strtolower($word->word),
+                    'part_of_speech' => $word->part_of_speech,
+                    'definition' => $word->definition_en,
+                    'definition_vi' => $definitionVi,
+                    'examples' => $word->example_en ? json_encode([$word->example_en]) : null,
+                    'synonyms' => $word->synonyms ? json_encode($word->synonyms) : null,
+                    'source' => 'IELTS Focus Vocabulary',
+                    'source_id' => 'vocabulary-' . $word->id,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                ];
+            })
+            ->all();
+
+        foreach (array_chunk($records, 1000) as $chunk) {
+            $this->upsert($chunk);
+        }
+    }
+
     private function makeVietnameseContext(string $word, string $partOfSpeech, string $definition, $vietnameseMeanings): string
     {
         $meaning = $vietnameseMeanings->get(strtolower($word));
 
-        if ($meaning && $meaning !== 'Đang cập nhật nghĩa tiếng Việt.') {
+        if (
+            $meaning
+            && ! $this->isMissingVietnamese($meaning)
+            && ! str_contains($meaning, 'Giải thích học thuật:')
+        ) {
             return $meaning;
         }
 
@@ -170,5 +208,13 @@ class DictionaryEntrySeeder extends Seeder
         $label = $labels[$partOfSpeech] ?? 'từ';
 
         return "({$label}) Giải thích tiếng Anh: {$definition}";
+    }
+
+    private function isMissingVietnamese(?string $value): bool
+    {
+        $value = trim((string) $value);
+        $legacyPrefix = implode(' ', ['Đang', 'cập', 'nhật']);
+
+        return $value === '' || str_starts_with($value, $legacyPrefix);
     }
 }

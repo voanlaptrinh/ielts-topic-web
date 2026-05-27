@@ -75,7 +75,7 @@ class PracticeTestController extends Controller
 
     public function submitVocabulary(Request $request, string $level = 'intermediate')
     {
-        $answers = $request->input('answers', []);
+        $answers = $this->validatedAnswers($request);
         $words = Vocabulary::whereIn('id', array_keys($answers))->get()->keyBy('id');
         $results = [];
         $score = 0;
@@ -134,7 +134,7 @@ class PracticeTestController extends Controller
 
     public function submitGrammar(Request $request, string $level = 'intermediate')
     {
-        $answers = $request->input('answers', []);
+        $answers = $this->validatedAnswers($request);
         $entries = DictionaryEntry::whereIn('id', array_keys($answers))->get()->keyBy('id');
         $results = [];
         $score = 0;
@@ -188,10 +188,11 @@ class PracticeTestController extends Controller
 
     public function submitSentenceRole(Request $request, string $level = 'intermediate')
     {
-        $answers = $request->input('answers', []);
-        $correctAnswers = $request->input('correct', []);
-        $explanations = $request->input('explanations', []);
-        $targets = $request->input('targets', []);
+        $payload = $this->validatedSentenceRolePayload($request);
+        $answers = $payload['answers'];
+        $correctAnswers = $payload['correct'];
+        $explanations = $payload['explanations'];
+        $targets = $payload['targets'];
         $results = [];
         $score = 0;
 
@@ -247,7 +248,7 @@ class PracticeTestController extends Controller
 
     public function submitDefinition(Request $request, string $level = 'intermediate')
     {
-        $answers = $request->input('answers', []);
+        $answers = $this->validatedAnswers($request);
         $entries = DictionaryEntry::whereIn('id', array_keys($answers))->get()->keyBy('id');
         $results = [];
         $score = 0;
@@ -305,7 +306,7 @@ class PracticeTestController extends Controller
 
     public function submitSpelling(Request $request, string $level = 'intermediate')
     {
-        $answers = $request->input('answers', []);
+        $answers = $this->validatedAnswers($request);
         $words = Vocabulary::whereIn('id', array_keys($answers))->get()->keyBy('id');
         $results = [];
         $score = 0;
@@ -366,7 +367,7 @@ class PracticeTestController extends Controller
 
     public function submitExampleCompletion(Request $request, string $level = 'intermediate')
     {
-        $answers = $request->input('answers', []);
+        $answers = $this->validatedAnswers($request);
         $words = Vocabulary::whereIn('id', array_keys($answers))->get()->keyBy('id');
         $results = [];
         $score = 0;
@@ -421,7 +422,7 @@ class PracticeTestController extends Controller
 
     public function submitIeltsFormat(Request $request, string $level = 'intermediate')
     {
-        $answers = $request->input('answers', []);
+        $answers = $this->validatedAnswers($request);
         $questions = collect($this->ieltsFormatQuestions($level));
         $results = [];
         $score = 0;
@@ -476,7 +477,7 @@ class PracticeTestController extends Controller
     public function submitSkillPractice(Request $request, string $level, string $skill)
     {
         $practice = $this->skillPracticeConfig($skill);
-        $answers = $request->input('answers', []);
+        $answers = $this->validatedAnswers($request);
         $questions = collect($this->skillPracticeQuestions($level, $skill));
         $results = [];
         $score = 0;
@@ -600,11 +601,16 @@ class PracticeTestController extends Controller
     {
         $meaning = trim((string) $word->meaning_vi);
 
-        if ($meaning !== '' && ! str_starts_with($meaning, 'Đang cập nhật')) {
+        if ($meaning !== '' && ! $this->isLegacyVocabularyPlaceholder($meaning)) {
             return $meaning;
         }
 
         return $word->definition_en ?: "Academic meaning of {$word->word}";
+    }
+
+    private function isLegacyVocabularyPlaceholder(string $value): bool
+    {
+        return str_starts_with($value, implode(' ', ['Đang', 'cập', 'nhật']));
     }
 
     private function expandedSentenceRoleQuestions(): array
@@ -1138,6 +1144,34 @@ class PracticeTestController extends Controller
             'score' => $score,
             'total' => $total,
             'details' => $results,
+        ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function validatedAnswers(Request $request): array
+    {
+        return $request->validate([
+            'answers' => ['required', 'array', 'min:1'],
+            'answers.*' => ['required', 'string', 'max:1000'],
+        ])['answers'];
+    }
+
+    /**
+     * @return array{answers: array<string, string>, correct: array<string, string>, explanations: array<string, string>, targets: array<string, string>}
+     */
+    private function validatedSentenceRolePayload(Request $request): array
+    {
+        return $request->validate([
+            'answers' => ['required', 'array', 'min:1'],
+            'answers.*' => ['required', 'string', 'max:1000'],
+            'correct' => ['required', 'array', 'min:1'],
+            'correct.*' => ['required', 'string', 'max:1000'],
+            'explanations' => ['required', 'array', 'min:1'],
+            'explanations.*' => ['required', 'string', 'max:2000'],
+            'targets' => ['required', 'array', 'min:1'],
+            'targets.*' => ['required', 'string', 'max:500'],
         ]);
     }
 
