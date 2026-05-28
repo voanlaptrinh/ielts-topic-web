@@ -21,4 +21,16 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_sitemap_returns_xml(): void
+    {
+        $this->seed(TopicSeeder::class);
+
+        $response = $this->get('/sitemap.xml');
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/xml');
+        $response->assertSee('<urlset', false);
+        $response->assertSee(route('topics.index'), false);
+    }
 }

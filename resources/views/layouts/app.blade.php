@@ -4,7 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="@yield('meta_description', 'IELTS Focus giúp người học Việt Nam luyện IELTS theo lộ trình rõ ràng với topic, từ vựng, từ điển, bài test ngắn và lịch sử lỗi sai.')">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#2457d6">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta property="og:site_name" content="IELTS Focus">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@yield('title', 'IELTS Focus')">
+    <meta property="og:description" content="@yield('meta_description', 'IELTS Focus giúp người học Việt Nam luyện IELTS theo lộ trình rõ ràng với topic, từ vựng, từ điển, bài test ngắn và lịch sử lỗi sai.')">
+    <meta property="og:url" content="{{ url()->current() }}">
     <title>@yield('title', 'IELTS Focus')</title>
+    @stack('head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -41,6 +51,21 @@
     <main class="container main-content">
         @yield('content')
     </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer-grid">
+            <div>
+                <a class="footer-brand" href="{{ route('topics.index') }}">IELTS Focus</a>
+                <p class="footer-copy">Nền tảng tự học IELTS bằng tiếng Việt, tập trung vào lộ trình, từ vựng, bài luyện ngắn và ôn lại lỗi sai thật.</p>
+            </div>
+            <nav class="footer-links" aria-label="Liên kết cuối trang">
+                <a href="{{ route('topics.index') }}">Topic IELTS</a>
+                <a href="{{ route('vocabularies.index') }}">Từ vựng</a>
+                <a href="{{ route('dictionary.index') }}">Từ điển</a>
+                <a href="{{ route('tests.index') }}">Luyện bài</a>
+            </nav>
+        </div>
+    </footer>
 </div>
 </body>
 </html>

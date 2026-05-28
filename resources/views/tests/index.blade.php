@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Luyện bài IELTS - IELTS Focus')
+@section('meta_description', 'Luyện IELTS theo 6 cấp độ với bài test từ vựng, ngữ pháp, thành phần câu, chính tả, điền từ và kỹ năng đọc hiểu.')
 
 @section('content')
     <header class="hero-panel p-4 p-lg-5">

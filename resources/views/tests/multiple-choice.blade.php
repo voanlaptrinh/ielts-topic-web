@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', $title . ' - IELTS Focus')
+@section('meta_description', $subtitle . ' Làm bài, chấm điểm ngay và xem giải thích lỗi sai trên IELTS Focus.')
+
 @section('content')
     <header class="page-header">
         <h1>{{ $title }}</h1>

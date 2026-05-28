@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Từ điển Anh - Việt - IELTS Focus')
+@section('meta_description', 'Từ điển Anh - Việt cho người học IELTS: tra từ gốc, biến thể, loại từ, định nghĩa, ngữ cảnh và dịch nhanh.')
 
 @section('content')
     <header class="hero-panel p-4 p-lg-5">

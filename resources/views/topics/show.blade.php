@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $topic->title . ' - IELTS Focus')
+@section('meta_description', $topic->description . ' Luyện câu hỏi, bài mẫu và mẹo cải thiện band điểm trên IELTS Focus.')
 
 @section('content')
     <a class="btn btn-link ps-0 mb-3" href="{{ route('topics.index') }}">Quay lại danh sách</a>
@@ -50,4 +51,16 @@
             </div>
         </section>
     @endif
+
+    <section class="next-step-panel mt-4">
+        <div>
+            <span class="eyebrow">Bước tiếp theo</span>
+            <h2 class="h4 mb-1">Biến topic này thành vốn từ và phản xạ làm bài.</h2>
+            <p class="text-muted mb-0">Sau khi đọc bài mẫu, hãy tra từ khóa quan trọng hoặc làm một bài test ngắn để kiểm tra mức hiểu.</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-primary" href="{{ route('vocabularies.index') }}">Tra từ vựng</a>
+            <a class="btn btn-primary" href="{{ route('tests.index') }}">Luyện bài</a>
+        </div>
+    </section>
 @endsection

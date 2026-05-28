@@ -1,16 +1,64 @@
 @extends('layouts.app')
 
-@section('title', 'IELTS Focus - Ôn IELTS thực tế')
+@section('title', 'IELTS Focus - Lộ trình tự học IELTS cho người Việt')
+@section('meta_description', 'IELTS Focus là nền tảng tự học IELTS bằng tiếng Việt với topic Speaking/Writing, từ vựng học thuật, từ điển, flashcard, bài test và lịch sử lỗi sai.')
+
+@push('head')
+    <script type="application/ld+json">
+        {!! json_encode($structuredData['website'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+    </script>
+    <script type="application/ld+json">
+        {!! json_encode($structuredData['organization'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+    </script>
+    <script type="application/ld+json">
+        {!! json_encode($structuredData['faq'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+    </script>
+@endpush
 
 @section('content')
     <section class="hero-panel p-4 p-lg-5">
-        <span class="eyebrow">Lộ trình IELTS tự học</span>
-        <h1 class="display-title">Ôn topic, từ vựng và dạng bài IELTS trong một nơi.</h1>
-        <p class="lead-copy">Chọn chủ đề để luyện Speaking/Writing, tra từ theo ngữ cảnh, làm quiz nhanh và theo dõi lỗi sai sau mỗi lần luyện.</p>
+        <div class="hero-grid">
+            <div>
+                <span class="eyebrow">Mục tiêu: lựa chọn IELTS số 1 cho người Việt</span>
+                <h1 class="display-title">Tự học IELTS theo đúng việc cần làm hôm nay.</h1>
+                <p class="lead-copy">IELTS Focus gom topic, từ vựng, từ điển, flashcard, bài test và lịch sử lỗi sai vào một lộ trình tiếng Việt rõ ràng. Mỗi ngày bạn biết nên học gì, làm bài nào và ôn lại lỗi nào.</p>
 
-        <div class="d-flex flex-wrap gap-2 mt-4">
-            <a class="btn btn-primary" href="{{ route('tests.index') }}">Bắt đầu luyện bài</a>
-            <a class="btn btn-outline-primary" href="{{ route('vocabularies.index') }}">Tra từ IELTS</a>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="{{ $learningPlan['recommended_route'] }}">Học theo gợi ý hôm nay</a>
+                    <a class="btn btn-outline-primary" href="{{ route('vocabularies.index') }}">Tra từ IELTS</a>
+                    <a class="btn btn-outline-primary" href="{{ route('tests.index') }}">Làm bài kiểm tra</a>
+                </div>
+
+                <div class="trust-strip">
+                    @foreach ($qualitySignals as $signal)
+                        <span class="trust-pill">{{ $signal }}</span>
+                    @endforeach
+                </div>
+            </div>
+
+            <aside class="today-panel">
+                <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                    <div>
+                        <span class="eyebrow">25 phút hôm nay</span>
+                        <h2 class="h5 mb-0">Kế hoạch cá nhân</h2>
+                    </div>
+                    <span class="plan-score">
+                        {{ $learningPlan['accuracy'] !== null ? $learningPlan['accuracy'] . '%' : 'Mới' }}
+                    </span>
+                </div>
+
+                <div class="today-steps">
+                    @foreach ($learningPlan['today'] as $step)
+                        <a class="today-step" href="{{ $step['route'] }}">
+                            <span class="today-step-time">{{ $step['time'] }}</span>
+                            <span>
+                                <strong>{{ $step['title'] }}</strong>
+                                <small>{{ $step['description'] }}</small>
+                            </span>
+                        </a>
+                    @endforeach
+                </div>
+            </aside>
         </div>
 
         <div class="row g-3 mt-4">
@@ -41,6 +89,81 @@
         </div>
     </section>
 
+    <section class="market-grid mb-4">
+        @foreach ($marketEdges as $edge)
+            <article class="market-card">
+                <h2 class="h5">{{ $edge['title'] }}</h2>
+                <p>{{ $edge['description'] }}</p>
+            </article>
+        @endforeach
+    </section>
+
+    <section class="learning-command mb-4">
+        <div class="learning-command-main">
+            <span class="eyebrow">Chiến lược cạnh tranh</span>
+            <h2 class="h3 mb-3">Không chỉ có tài liệu, trang này dẫn người học đến hành động tiếp theo.</h2>
+            <div class="benchmark-grid">
+                @foreach ($benchmarkWins as $item)
+                    <article class="benchmark-item">
+                        <span class="benchmark-source">{{ $item['source'] }}</span>
+                        <p class="mb-1"><strong>Họ mạnh:</strong> {{ $item['strength'] }}.</p>
+                        <p class="mb-0"><strong>Mình vượt lên:</strong> {{ $item['our_move'] }}</p>
+                    </article>
+                @endforeach
+            </div>
+        </div>
+
+        <aside class="weak-review-panel">
+            <span class="eyebrow">Ôn tập cách quãng</span>
+            <h2 class="h5">Việc cần xem lại</h2>
+            @if ($learningPlan['weak_items']->isNotEmpty())
+                <div class="vstack gap-2">
+                    @foreach ($learningPlan['weak_items'] as $item)
+                        <div class="review-item">
+                            <span class="badge text-bg-danger">{{ $item['test_type'] }}</span>
+                            <strong>{{ $item['prompt'] }}</strong>
+                            @if ($item['correct'])
+                                <small>Đáp án đúng: {{ $item['correct'] }}</small>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+                <a class="btn btn-outline-primary btn-sm mt-3" href="{{ route('history.index') }}">Mở lịch sử lỗi</a>
+            @else
+                <p class="text-muted mb-3">Làm một bài test để hệ thống tự tạo danh sách lỗi cần ôn. Người mới sẽ bắt đầu bằng flashcard và bài cấp độ gợi ý.</p>
+                <a class="btn btn-outline-primary btn-sm" href="{{ route('vocabularies.flashcards') }}">Ôn flashcard</a>
+            @endif
+        </aside>
+    </section>
+
+    <section class="skill-track-strip mb-4">
+        @foreach ($skillTracks as $track)
+            <div class="skill-track">
+                <strong>{{ $track['label'] }}</strong>
+                <span>{{ $track['value'] }}</span>
+            </div>
+        @endforeach
+    </section>
+
+    <section class="growth-section mb-4">
+        <div class="section-heading-row">
+            <div>
+                <span class="eyebrow">Kế hoạch để cạnh tranh top đầu</span>
+                <h2 class="h3 mb-0">Top 1 cần sản phẩm tốt, nội dung dày và dữ liệu học thật.</h2>
+            </div>
+            <a class="btn btn-outline-primary" href="{{ route('tests.index') }}">Bắt đầu luyện</a>
+        </div>
+        <div class="growth-grid">
+            @foreach ($growthRoadmap as $step)
+                <article class="growth-card">
+                    <span class="growth-stage">{{ $step['stage'] }}</span>
+                    <h3 class="h5">{{ $step['title'] }}</h3>
+                    <p>{{ $step['description'] }}</p>
+                </article>
+            @endforeach
+        </div>
+    </section>
+
     @auth
         @if ($recentAttempts->isNotEmpty())
             <section class="soft-panel mb-4">
@@ -63,7 +186,7 @@
         @endif
     @endauth
 
-    <section class="mb-4">
+    <section class="mb-4" id="topic-bank">
         <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
             <div>
                 <span class="eyebrow">Kho topic</span>
@@ -85,6 +208,23 @@
                         <a class="btn btn-primary align-self-start" href="{{ route('topics.show', $topic->slug) }}">Ôn topic này</a>
                     </div>
                 </article>
+            @endforeach
+        </div>
+    </section>
+
+    <section class="faq-section mb-4">
+        <div class="section-heading-row">
+            <div>
+                <span class="eyebrow">Câu hỏi thường gặp</span>
+                <h2 class="h3 mb-0">Người học cần biết gì trước khi bắt đầu?</h2>
+            </div>
+        </div>
+        <div class="faq-list">
+            @foreach ($faqs as $faq)
+                <details class="faq-item">
+                    <summary>{{ $faq['question'] }}</summary>
+                    <p>{{ $faq['answer'] }}</p>
+                </details>
             @endforeach
         </div>
     </section>

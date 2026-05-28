@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', 'Quiz từ vựng IELTS - IELTS Focus')
+@section('meta_description', 'Làm quiz từ vựng IELTS nhanh, chấm điểm ngay và xem lại lỗi sai để ôn tập hiệu quả hơn.')
+
 @section('content')
     <header class="page-header">
         <h1>Làm quiz từ vựng IELTS</h1>

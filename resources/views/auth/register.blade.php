@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Tạo tài khoản - IELTS Focus')
+@section('meta_description', 'Tạo tài khoản IELTS Focus miễn phí để lưu tiến độ học, lịch sử tra từ, điểm luyện tập và danh sách lỗi cần ôn.')
 
 @section('content')
     <div class="row justify-content-center">

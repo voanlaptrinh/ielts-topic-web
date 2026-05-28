@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $vocabulary->word . ' - IELTS Focus')
+@section('meta_description', $vocabulary->word . ': ' . $vocabulary->meaning_vi . '. Xem định nghĩa, phát âm, loại từ, ví dụ IELTS và từ đồng nghĩa.')
 
 @section('content')
     <a class="btn btn-link ps-0 mb-3" href="{{ route('vocabularies.index', ['q' => $vocabulary->word]) }}">Quay lại tra từ vựng</a>
@@ -48,5 +49,17 @@
                 <p class="text-muted mb-0 mt-3">Chưa có từ đồng nghĩa cho mục này.</p>
             @endif
         </article>
+    </section>
+
+    <section class="next-step-panel mt-4">
+        <div>
+            <span class="eyebrow">Ôn chủ động</span>
+            <h2 class="h4 mb-1">Đưa từ này vào bài luyện thay vì chỉ đọc nghĩa.</h2>
+            <p class="text-muted mb-0">Dùng flashcard để nhớ nhanh hoặc làm quiz để kiểm tra khả năng nhận diện nghĩa.</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-primary" href="{{ route('vocabularies.flashcards') }}">Flashcard</a>
+            <a class="btn btn-primary" href="{{ route('vocabularies.quiz') }}">Quiz nhanh</a>
+        </div>
     </section>
 @endsection

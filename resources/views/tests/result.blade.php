@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $title . ' - IELTS Focus')
+@section('meta_description', 'Kết quả luyện tập IELTS Focus: xem điểm, độ chính xác, lỗi sai, đáp án đúng và giải thích chi tiết.')
 
 @section('content')
     @php

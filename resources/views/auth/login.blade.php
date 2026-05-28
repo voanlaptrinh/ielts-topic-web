@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Đăng nhập - IELTS Focus')
+@section('meta_description', 'Đăng nhập IELTS Focus để lưu lịch sử tra từ, điểm bài luyện, lỗi sai và kế hoạch học IELTS cá nhân.')
 
 @section('content')
     <div class="row justify-content-center">

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $config['name'] . ' - IELTS Focus')
+@section('meta_description', $config['name'] . ' ' . $config['band'] . ': ' . $config['description'] . ' Luyện từ vựng, ngữ pháp, câu và kỹ năng đọc IELTS.')
 
 @section('content')
     <a class="btn btn-link ps-0 mb-3" href="{{ route('tests.index') }}">Quay lại 6 cấp độ</a>

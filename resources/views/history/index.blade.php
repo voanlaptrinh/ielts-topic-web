@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Tiến độ học tập - IELTS Focus')
+@section('meta_description', 'Dashboard tiến độ IELTS Focus giúp theo dõi điểm bài luyện, độ chính xác, lỗi sai và các từ đã tra gần đây.')
 
 @section('content')
     <header class="hero-panel p-4 p-lg-5">

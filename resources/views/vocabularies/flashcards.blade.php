@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Flashcard từ vựng - IELTS Focus')
+@section('meta_description', 'Ôn từ vựng IELTS bằng flashcard với nghĩa tiếng Việt, giải thích tiếng Anh và ví dụ theo ngữ cảnh.')
 
 @section('content')
     <header class="hero-panel p-4 p-lg-5">

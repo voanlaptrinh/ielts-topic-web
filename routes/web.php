@@ -6,10 +6,52 @@ use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PracticeTestController;
 use App\Http\Controllers\VocabularyController;
+use App\Models\Topic;
+use App\Models\Vocabulary;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
 
 Route::get('/', [TopicController::class, 'index'])->name('topics.index');
 Route::get('/topics/{slug}', [TopicController::class, 'show'])->name('topics.show');
+
+Route::get('/sitemap.xml', function () {
+    $staticUrls = collect([
+        route('topics.index'),
+        route('vocabularies.index'),
+        route('vocabularies.flashcards'),
+        route('vocabularies.quiz'),
+        route('dictionary.index'),
+        route('tests.index'),
+    ]);
+
+    $levelUrls = collect([
+        'foundation',
+        'elementary',
+        'pre-intermediate',
+        'intermediate',
+        'upper-intermediate',
+        'advanced',
+    ])->map(fn (string $level) => route('tests.level', $level));
+
+    $topicUrls = Topic::orderBy('slug')
+        ->pluck('slug')
+        ->map(fn (string $slug) => route('topics.show', $slug));
+
+    $vocabularyUrls = Vocabulary::orderBy('word')
+        ->pluck('word')
+        ->map(fn (string $word) => route('vocabularies.show', $word));
+
+    $urls = $staticUrls
+        ->merge($levelUrls)
+        ->merge($topicUrls)
+        ->merge($vocabularyUrls)
+        ->unique()
+        ->values();
+
+    $xml = view('sitemap', ['urls' => $urls])->render();
+
+    return Response::make($xml, 200, ['Content-Type' => 'application/xml']);
+})->name('sitemap');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
