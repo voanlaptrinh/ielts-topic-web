@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             VocabularySeeder::class,
             PracticeTestSeeder::class,
             DictionaryEntrySeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

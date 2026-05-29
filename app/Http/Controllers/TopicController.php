@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DictionaryEntry;
+use App\Models\Faq;
 use App\Models\TestAttempt;
 use App\Models\Topic;
 use App\Models\Vocabulary;
@@ -267,6 +268,21 @@ class TopicController extends Controller
 
     private function faqs(): array
     {
+        $faqs = Faq::query()
+            ->where('is_published', true)
+            ->orderBy('position')
+            ->orderBy('id')
+            ->get(['question', 'answer'])
+            ->map(fn (Faq $faq) => [
+                'question' => $faq->question,
+                'answer' => $faq->answer,
+            ])
+            ->all();
+
+        if ($faqs !== []) {
+            return $faqs;
+        }
+
         return [
             [
                 'question' => 'IELTS Focus phù hợp với ai?',

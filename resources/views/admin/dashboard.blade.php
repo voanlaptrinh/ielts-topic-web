@@ -31,6 +31,12 @@
                 <span class="metric-label">User</span>
             </div>
         </div>
+        <div class="col-6 col-lg-4">
+            <div class="metric-card">
+                <span class="metric-value">{{ number_format($stats['faqs']) }}</span>
+                <span class="metric-label">FAQ</span>
+            </div>
+        </div>
     </section>
 
     <section class="admin-action-grid mb-4">
@@ -41,6 +47,10 @@
         <a class="admin-action-card" href="{{ route('admin.vocabularies.index') }}">
             <strong>Quản lý từ vựng</strong>
             <span>Sửa nghĩa, ví dụ, chủ đề, level và synonyms.</span>
+        </a>
+        <a class="admin-action-card" href="{{ route('admin.faqs.index') }}">
+            <strong>Quản lý FAQ trang home</strong>
+            <span>Thêm, sửa, xóa và sắp xếp câu hỏi thường gặp.</span>
         </a>
     </section>
 

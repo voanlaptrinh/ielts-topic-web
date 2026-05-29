@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Topic;
 use App\Models\User;
 use App\Models\Vocabulary;
+use App\Models\Faq;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -86,5 +87,42 @@ class AdminTest extends TestCase
             'word' => 'updated',
             'meaning_vi' => 'cập nhật',
         ]);
+    }
+
+    public function test_admin_can_manage_faqs(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $this->actingAs($admin)->post('/admin/faqs', [
+            'question' => 'How should I study daily?',
+            'answer' => 'Choose one topic, do one timed task, then review mistakes.',
+            'position' => 3,
+            'is_published' => '1',
+        ])->assertRedirect('/admin/faqs');
+
+        $faq = Faq::firstOrFail();
+
+        $this->assertDatabaseHas('faqs', [
+            'id' => $faq->id,
+            'question' => 'How should I study daily?',
+            'is_published' => true,
+        ]);
+
+        $this->actingAs($admin)->put("/admin/faqs/{$faq->id}", [
+            'question' => 'How should I review mistakes?',
+            'answer' => 'Open the mistake list and repeat the related vocabulary.',
+            'position' => 1,
+        ])->assertRedirect('/admin/faqs');
+
+        $this->assertDatabaseHas('faqs', [
+            'id' => $faq->id,
+            'question' => 'How should I review mistakes?',
+            'is_published' => false,
+        ]);
+
+        $this->actingAs($admin)->delete("/admin/faqs/{$faq->id}")
+            ->assertRedirect('/admin/faqs');
+
+        $this->assertDatabaseMissing('faqs', ['id' => $faq->id]);
     }
 }

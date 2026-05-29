@@ -113,6 +113,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/vocabularies/{vocabulary}/edit', [AdminController::class, 'editVocabulary'])->name('vocabularies.edit');
     Route::put('/vocabularies/{vocabulary}', [AdminController::class, 'updateVocabulary'])->name('vocabularies.update');
     Route::delete('/vocabularies/{vocabulary}', [AdminController::class, 'destroyVocabulary'])->name('vocabularies.destroy');
+    Route::get('/faqs', [AdminController::class, 'faqs'])->name('faqs.index');
+    Route::get('/faqs/create', [AdminController::class, 'createFaq'])->name('faqs.create');
+    Route::post('/faqs', [AdminController::class, 'storeFaq'])->name('faqs.store');
+    Route::get('/faqs/{faq}/edit', [AdminController::class, 'editFaq'])->name('faqs.edit');
+    Route::put('/faqs/{faq}', [AdminController::class, 'updateFaq'])->name('faqs.update');
+    Route::delete('/faqs/{faq}', [AdminController::class, 'destroyFaq'])->name('faqs.destroy');
 });
 
 Route::get('/vocabulary', [VocabularyController::class, 'index'])->name('vocabularies.index');

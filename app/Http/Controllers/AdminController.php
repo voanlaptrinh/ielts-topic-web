@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Faq;
 use App\Models\PracticeTest;
 use App\Models\TestAttempt;
 use App\Models\Topic;
@@ -22,6 +23,7 @@ class AdminController extends Controller
                 'practiceTests' => PracticeTest::count(),
                 'vocabularies' => Vocabulary::count(),
                 'users' => User::count(),
+                'faqs' => Faq::count(),
             ],
             'recentTopics' => Topic::latest()->take(5)->get(),
             'recentPracticeTests' => PracticeTest::latest()->take(5)->get(),
@@ -212,6 +214,55 @@ class AdminController extends Controller
         return redirect()->route('admin.practice-tests.index')->with('status', 'Đã xóa đề luyện tập.');
     }
 
+    public function faqs()
+    {
+        return view('admin.faqs.index', [
+            'faqs' => Faq::orderBy('position')->orderBy('id')->paginate(20),
+        ]);
+    }
+
+    public function createFaq()
+    {
+        return view('admin.faqs.form', [
+            'faq' => new Faq([
+                'position' => (Faq::max('position') ?? 0) + 1,
+                'is_published' => true,
+            ]),
+            'action' => route('admin.faqs.store'),
+            'method' => 'POST',
+        ]);
+    }
+
+    public function storeFaq(Request $request)
+    {
+        Faq::create($this->faqData($request));
+
+        return redirect()->route('admin.faqs.index')->with('status', 'Đã tạo câu hỏi thường gặp.');
+    }
+
+    public function editFaq(Faq $faq)
+    {
+        return view('admin.faqs.form', [
+            'faq' => $faq,
+            'action' => route('admin.faqs.update', $faq),
+            'method' => 'PUT',
+        ]);
+    }
+
+    public function updateFaq(Request $request, Faq $faq)
+    {
+        $faq->update($this->faqData($request));
+
+        return redirect()->route('admin.faqs.index')->with('status', 'Đã cập nhật câu hỏi thường gặp.');
+    }
+
+    public function destroyFaq(Faq $faq)
+    {
+        $faq->delete();
+
+        return redirect()->route('admin.faqs.index')->with('status', 'Đã xóa câu hỏi thường gặp.');
+    }
+
     private function topicData(Request $request, ?Topic $topic = null): array
     {
         $data = $request->validate([
@@ -263,6 +314,23 @@ class AdminController extends Controller
             'topic' => $data['topic'] ?? null,
             'level' => $data['level'],
             'synonyms' => $this->items($data['synonyms_text'] ?? ''),
+        ];
+    }
+
+    private function faqData(Request $request): array
+    {
+        $data = $request->validate([
+            'question' => ['required', 'string', 'max:255'],
+            'answer' => ['required', 'string', 'max:5000'],
+            'position' => ['required', 'integer', 'min:0', 'max:999'],
+            'is_published' => ['nullable', 'boolean'],
+        ]);
+
+        return [
+            'question' => $data['question'],
+            'answer' => $data['answer'],
+            'position' => $data['position'],
+            'is_published' => $request->boolean('is_published'),
         ];
     }
 
