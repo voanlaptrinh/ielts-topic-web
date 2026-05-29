@@ -114,9 +114,6 @@
                         <span><x-ui-icon :name="$step['icon']" /></span>
                         <small>{{ $step['label'] }}</small>
                     </div>
-                    @if (! $loop->last)
-                        <b><x-ui-icon name="arrow-right" /></b>
-                    @endif
                 @endforeach
             </div>
             <a class="btn btn-primary btn-sm" href="{{ route('tests.index') }}">Bắt đầu học ngay</a>

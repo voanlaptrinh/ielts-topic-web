@@ -562,43 +562,93 @@ a {
 
 .home-progress-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(250px, .58fr) minmax(250px, .9fr);
+    grid-template-columns: minmax(0, 1.38fr) minmax(300px, .62fr);
     gap: 1.15rem;
     margin-bottom: 1.15rem;
+    align-items: stretch;
+}
+
+.strategy-card {
+    position: relative;
+    grid-row: span 2;
+    padding: 1.35rem;
+    overflow: hidden;
+}
+
+.strategy-card::after {
+    content: "";
+    position: absolute;
+    right: -4rem;
+    bottom: -5rem;
+    width: 15rem;
+    height: 15rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(37, 99, 235, .12), transparent 68%);
+    pointer-events: none;
 }
 
 .strategy-flow {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .7rem;
-    margin: 1.4rem 0 1rem;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .85rem;
+    margin: 1.45rem 0 1.15rem;
+    counter-reset: strategy-step;
+}
+
+.strategy-flow::before {
+    content: "";
+    position: absolute;
+    top: 2.25rem;
+    right: 8%;
+    left: 8%;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(37, 99, 235, .08), rgba(37, 99, 235, .38), rgba(37, 99, 235, .08));
 }
 
 .strategy-step {
+    position: relative;
+    z-index: 1;
     display: grid;
     justify-items: center;
-    gap: .55rem;
+    gap: .65rem;
+    min-height: 8.6rem;
+    padding: .9rem .65rem .8rem;
     text-align: center;
+    border: 1px solid rgba(37, 99, 235, .12);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, .94);
+    box-shadow: 0 16px 34px rgba(29, 78, 216, .055);
+    counter-increment: strategy-step;
+}
+
+.strategy-step::before {
+    content: counter(strategy-step, decimal-leading-zero);
+    position: absolute;
+    top: .65rem;
+    right: .7rem;
+    color: rgba(37, 99, 235, .42);
+    font-size: .72rem;
+    font-weight: 800;
+    line-height: 1;
 }
 
 .strategy-step small {
-    max-width: 5.2rem;
+    max-width: 8rem;
     color: #1f2937;
+    line-height: 1.35;
     font-weight: 600;
 }
 
-.strategy-flow b {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary);
-    font-size: 1.4rem;
+.strategy-card > .btn {
+    position: relative;
+    z-index: 1;
 }
 
-.strategy-flow b .ui-icon {
-    width: 1.1rem;
-    height: 1.1rem;
+.review-card,
+.empty-review-card {
+    min-height: 0;
 }
 
 .review-counter {
@@ -2486,13 +2536,30 @@ a {
     }
 
     .strategy-flow {
-        align-items: stretch;
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        gap: .75rem;
     }
 
-    .strategy-flow b {
-        transform: rotate(90deg);
-        align-self: center;
+    .strategy-flow::before {
+        top: 2.5rem;
+        bottom: 2.5rem;
+        left: 1.95rem;
+        width: 2px;
+        height: auto;
+        background: linear-gradient(180deg, rgba(37, 99, 235, .08), rgba(37, 99, 235, .34), rgba(37, 99, 235, .08));
+    }
+
+    .strategy-step {
+        grid-template-columns: 2.65rem minmax(0, 1fr);
+        justify-items: start;
+        align-items: center;
+        min-height: auto;
+        padding: .85rem 2.4rem .85rem .75rem;
+        text-align: left;
+    }
+
+    .strategy-step small {
+        max-width: none;
     }
 
     .empty-review-card,
