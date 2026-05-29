@@ -106,22 +106,22 @@ class TopicController extends Controller
     {
         return [
             [
-                'icon' => '⚑',
+                'icon' => 'flag',
                 'title' => 'Thiết kế cho người học Việt Nam',
                 'description' => 'Nội dung bám sát nhu cầu và khó khăn của người học Việt.',
             ],
             [
-                'icon' => '✦',
+                'icon' => 'puzzle',
                 'title' => 'Tích hợp toàn diện',
                 'description' => 'Kết hợp topic, từ vựng, từ điển, bài luyện và lịch sử lỗi sai.',
             ],
             [
-                'icon' => '▣',
+                'icon' => 'tasks',
                 'title' => 'Học theo hành động tiếp theo',
                 'description' => 'Gợi ý rõ ràng mỗi ngày giúp bạn tiến bộ đều đặn.',
             ],
             [
-                'icon' => '⌁',
+                'icon' => 'route',
                 'title' => 'Theo dõi và cá nhân hóa',
                 'description' => 'Theo dõi tiến độ và đưa ra gợi ý phù hợp với bạn.',
             ],
@@ -143,11 +143,11 @@ class TopicController extends Controller
     private function strategySteps(): array
     {
         return [
-            ['icon' => '☷', 'label' => 'Chọn topic học'],
-            ['icon' => '↗', 'label' => 'Làm bài luyện tập'],
-            ['icon' => '✎', 'label' => 'Xem lỗi sai chi tiết'],
-            ['icon' => '⌘', 'label' => 'Ôn lại kiến thức'],
-            ['icon' => '▾', 'label' => 'Theo dõi tiến độ'],
+            ['icon' => 'list', 'label' => 'Chọn topic học'],
+            ['icon' => 'tasks', 'label' => 'Làm bài luyện tập'],
+            ['icon' => 'edit', 'label' => 'Xem lỗi sai chi tiết'],
+            ['icon' => 'refresh', 'label' => 'Ôn lại kiến thức'],
+            ['icon' => 'chart', 'label' => 'Theo dõi tiến độ'],
         ];
     }
 

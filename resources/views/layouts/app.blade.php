@@ -29,7 +29,7 @@
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <div class="mobile-nav-head">
                     <a class="navbar-brand" href="{{ route('topics.index') }}">IELTS Focus</a>
-                    <button class="mobile-nav-close" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-label="Đóng menu">×</button>
+                    <button class="mobile-nav-close" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-label="Đóng menu"><x-ui-icon name="close" /></button>
                 </div>
                 <div class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
                     <a class="nav-link {{ request()->routeIs('topics.*') ? 'active' : '' }}" href="{{ route('topics.index') }}">Chủ đề</a>
@@ -40,7 +40,7 @@
                     <a class="nav-link {{ request()->routeIs('prep.*') ? 'active' : '' }}" href="{{ route('prep.index') }}">Lộ trình</a>
                     <form class="nav-search" method="GET" action="{{ route('search.index') }}">
                         <input name="q" value="{{ request('q') }}" placeholder="Tìm kiếm...">
-                        <button type="submit" aria-label="Tìm kiếm">⌕</button>
+                        <button type="submit" aria-label="Tìm kiếm"><x-ui-icon name="search" /></button>
                     </form>
                     @auth
                         <div class="nav-item dropdown ms-lg-2">
@@ -81,8 +81,8 @@
                 <p class="footer-copy">Nền tảng tự học IELTS toàn diện cho người Việt.</p>
                 <div class="footer-socials">
                     <span>f</span>
-                    <span>▶</span>
-                    <span>♪</span>
+                    <span><x-ui-icon name="play" /></span>
+                    <span><x-ui-icon name="music" /></span>
                 </div>
             </div>
             <div class="footer-column">

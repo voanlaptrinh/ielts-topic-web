@@ -44,29 +44,29 @@
                     </a>
                 @endforeach
             </div>
-            <a class="home-text-link" href="{{ route('tests.index') }}">Xem chi tiết kế hoạch →</a>
+            <a class="home-text-link" href="{{ route('tests.index') }}">Xem chi tiết kế hoạch <x-ui-icon name="arrow-right" /></a>
         </article>
 
         <article class="home-card system-stats-card">
             <h2>Thống kê hệ thống</h2>
             <div class="home-stat-grid">
                 <div class="home-stat">
-                    <span class="home-stat-icon">☁</span>
+                    <span class="home-stat-icon"><x-ui-icon name="book" /></span>
                     <strong>{{ number_format($stats['topics']) }}+</strong>
                     <small>Chủ đề<br>Speaking & Writing</small>
                 </div>
                 <div class="home-stat">
-                    <span class="home-stat-icon">▰</span>
+                    <span class="home-stat-icon"><x-ui-icon name="layers" /></span>
                     <strong>{{ number_format($stats['vocabularies']) }}+</strong>
                     <small>Từ vựng<br>IELTS</small>
                 </div>
                 <div class="home-stat">
-                    <span class="home-stat-icon">Aa</span>
+                    <span class="home-stat-icon"><x-ui-icon name="language" /></span>
                     <strong>{{ number_format($stats['dictionary_words']) }}+</strong>
                     <small>Mục từ<br>trong từ điển</small>
                 </div>
                 <div class="home-stat">
-                    <span class="home-stat-icon">▮</span>
+                    <span class="home-stat-icon"><x-ui-icon name="chart" /></span>
                     <strong>6</strong>
                     <small>Cấp độ<br>luyện tập</small>
                 </div>
@@ -80,7 +80,7 @@
             <div class="home-feature-grid">
                 @foreach ($marketEdges as $edge)
                     <div class="home-feature">
-                        <span>{{ $edge['icon'] }}</span>
+                        <span><x-ui-icon :name="$edge['icon']" /></span>
                         <div>
                             <strong>{{ $edge['title'] }}</strong>
                             <p>{{ $edge['description'] }}</p>
@@ -111,11 +111,11 @@
             <div class="strategy-flow">
                 @foreach ($strategySteps as $step)
                     <div class="strategy-step">
-                        <span>{{ $step['icon'] }}</span>
+                        <span><x-ui-icon :name="$step['icon']" /></span>
                         <small>{{ $step['label'] }}</small>
                     </div>
                     @if (! $loop->last)
-                        <b>→</b>
+                        <b><x-ui-icon name="arrow-right" /></b>
                     @endif
                 @endforeach
             </div>
@@ -137,7 +137,7 @@
         </article>
 
         <article class="home-card empty-review-card">
-            <div class="empty-review-illustration">⌕</div>
+            <div class="empty-review-illustration"><x-ui-icon name="search" /></div>
             <div>
                 <h2>Chưa có dữ liệu lỗi sai</h2>
                 <p>Hãy bắt đầu làm bài luyện tập hoặc học từ vựng để hệ thống ghi nhận và gợi ý ôn tập nhé!</p>
@@ -149,7 +149,7 @@
     <section class="home-card topic-section" id="topic-bank">
         <div class="home-section-heading">
             <h2>Kho topic IELTS</h2>
-            <a href="{{ route('topics.index') }}#topic-bank">Xem tất cả chủ đề →</a>
+            <a href="{{ route('topics.index') }}#topic-bank">Xem tất cả chủ đề <x-ui-icon name="arrow-right" /></a>
         </div>
         <div class="home-topic-grid">
             @foreach ($topicCards as $topic)
@@ -183,7 +183,7 @@
         </article>
 
         <article class="home-card support-card">
-            <div class="support-illustration">☏</div>
+            <div class="support-illustration"><x-ui-icon name="headset" /></div>
             <div>
                 <h2>Bạn cần hỗ trợ thêm?</h2>
                 <p>Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn trên hành trình chinh phục IELTS.</p>
