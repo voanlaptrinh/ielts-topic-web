@@ -75,7 +75,7 @@
     </section>
 
     <section class="home-two-columns">
-        <article class="home-card">
+        <article class="home-card feature-card">
             <h2>Vì sao chọn IELTS Focus?</h2>
             <div class="home-feature-grid">
                 @foreach ($marketEdges as $edge)
