@@ -82,7 +82,7 @@ a {
     align-items: center;
     gap: .5rem;
     color: var(--ink);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0;
     font-size: 1.08rem;
     line-height: 1;
@@ -99,14 +99,14 @@ a {
     color: #fff;
     background: linear-gradient(135deg, #1d4ed8, #38bdf8);
     font-size: .7rem;
-    font-weight: 900;
+    font-weight: 800;
     box-shadow: 0 10px 20px rgba(37, 99, 235, .22);
 }
 
 .nav-link {
     color: #172033;
     font-size: .87rem;
-    font-weight: 700;
+    font-weight: 600;
     border-radius: .7rem;
     padding: .46rem .64rem !important;
 }
@@ -125,7 +125,7 @@ a {
 
 .btn {
     border-radius: .8rem;
-    font-weight: 800;
+    font-weight: 700;
     transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, border-color .15s ease;
 }
 
@@ -163,7 +163,7 @@ a {
 .account-menu .dropdown-item {
     border-radius: .7rem;
     color: #334155;
-    font-weight: 750;
+    font-weight: 600;
 }
 
 .account-menu .dropdown-item:hover,
@@ -248,7 +248,7 @@ a {
     color: #07142f;
     font-size: clamp(2.45rem, 3.25vw, 3.7rem);
     line-height: 1.1;
-    font-weight: 900;
+    font-weight: 800;
     overflow-wrap: break-word;
 }
 
@@ -319,7 +319,7 @@ a {
     color: #0b4ab8;
     font-size: 1.12rem;
     line-height: 1.35;
-    font-weight: 900;
+    font-weight: 800;
 }
 
 .home-top-grid {
@@ -366,11 +366,12 @@ a {
     border-radius: .7rem;
     color: var(--primary);
     background: #eaf2ff;
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .home-plan-step strong {
     font-size: .95rem;
+    font-weight: 700;
 }
 
 .home-plan-step small {
@@ -381,7 +382,7 @@ a {
     display: inline-flex;
     margin-top: 1rem;
     color: var(--primary);
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .home-stat-grid {
@@ -411,7 +412,7 @@ a {
     color: var(--primary);
     background: linear-gradient(135deg, #eaf2ff, #f4f8ff);
     box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .08);
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .home-stat-icon .ui-icon {
@@ -424,14 +425,14 @@ a {
     color: #111827;
     font-size: clamp(1.7rem, 2vw, 2.05rem);
     line-height: 1;
-    font-weight: 900;
+    font-weight: 800;
 }
 
 .home-stat small {
     display: block;
     margin-top: .65rem;
     color: #1f2937;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .home-two-columns {
@@ -468,7 +469,7 @@ a {
     color: var(--primary);
     background: linear-gradient(135deg, #eaf2ff, #f4f8ff);
     box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .08);
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .home-feature > span .ui-icon,
@@ -482,7 +483,7 @@ a {
     margin-bottom: .28rem;
     color: #0f172a;
     line-height: 1.35;
-    font-weight: 850;
+    font-weight: 700;
 }
 
 .home-feature p,
@@ -511,7 +512,7 @@ a {
     gap: 1rem 1.35rem;
     margin: 1rem 0 1rem;
     color: #1d4ed8;
-    font-weight: 900;
+    font-weight: 800;
     line-height: .9;
 }
 
@@ -533,7 +534,7 @@ a {
     padding-left: 1.65rem;
     color: #1f2937;
     line-height: 1.35;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .home-check-list li::before {
@@ -584,7 +585,7 @@ a {
 .strategy-step small {
     max-width: 5.2rem;
     color: #1f2937;
-    font-weight: 750;
+    font-weight: 600;
 }
 
 .strategy-flow b {
@@ -620,7 +621,7 @@ a {
     border-radius: .55rem;
     color: var(--rose);
     background: #fee2e2;
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .empty-review-card {
@@ -641,7 +642,7 @@ a {
     color: var(--primary);
     background: #eaf2ff;
     font-size: 3.6rem;
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .empty-review-illustration .ui-icon,
@@ -692,14 +693,14 @@ a {
 
 .course-track-card small {
     color: var(--primary);
-    font-weight: 850;
+    font-weight: 700;
 }
 
 .course-track-card h3 {
     margin: .18rem 0 .45rem;
     color: #111827;
     font-size: 1rem;
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .course-track-card p {
@@ -714,7 +715,7 @@ a {
     padding-left: 1.1rem;
     margin: .75rem 0 1rem;
     color: #1f2937;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .test-library-grid {
@@ -745,7 +746,7 @@ a {
 .test-library-card strong {
     color: var(--primary);
     font-size: 1.05rem;
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .test-library-card p {
@@ -768,7 +769,7 @@ a {
     color: #1d4ed8;
     background: #eff6ff;
     font-size: .78rem;
-    font-weight: 850;
+    font-weight: 700;
 }
 
 .topic-section {
@@ -789,7 +790,7 @@ a {
     align-items: center;
     gap: .35rem;
     color: var(--primary);
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .home-text-link {
@@ -844,7 +845,7 @@ a {
 .home-topic-body h3 {
     margin: 0 0 .45rem;
     font-size: 1rem;
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .topic-tags {
@@ -863,7 +864,7 @@ a {
     padding: .15rem .45rem;
     border-radius: 999px;
     font-size: .72rem;
-    font-weight: 800;
+    font-weight: 600;
 }
 
 .topic-tags span {
@@ -914,7 +915,7 @@ a {
 .home-faq-grid summary {
     cursor: pointer;
     padding: .9rem 1rem;
-    font-weight: 850;
+    font-weight: 700;
 }
 
 .home-faq-grid p {
