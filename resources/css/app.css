@@ -192,6 +192,7 @@ a {
 .hero-panel {
     position: relative;
     overflow: hidden;
+    padding: clamp(1.45rem, 3vw, 2.4rem) !important;
     border: 1px solid rgba(37, 99, 235, .13);
     border-radius: 1.25rem;
     background:
@@ -205,7 +206,7 @@ a {
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 42%;
+    width: min(42%, 34rem);
     height: 100%;
     background:
         linear-gradient(135deg, transparent 0 45%, rgba(15, 118, 110, .1) 45% 62%, transparent 62%),
@@ -1293,10 +1294,10 @@ a {
 }
 
 .display-title {
-    max-width: 760px;
+    max-width: 720px;
     margin: .45rem 0 .65rem;
-    font-size: clamp(2rem, 4vw, 4.15rem);
-    line-height: 1.04;
+    font-size: clamp(2rem, 3.35vw, 3.35rem);
+    line-height: 1.08;
     font-weight: 850;
     letter-spacing: 0;
 }
@@ -1309,7 +1310,8 @@ a {
 .lead-copy {
     max-width: 760px;
     color: var(--muted);
-    font-size: 1.05rem;
+    font-size: clamp(.98rem, 1.05vw, 1.08rem);
+    line-height: 1.65;
 }
 
 .hero-actions {
@@ -1438,6 +1440,18 @@ a {
     transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
 }
 
+.study-card .card-body {
+    padding: 1.1rem;
+}
+
+.study-card h2 {
+    line-height: 1.18;
+}
+
+.study-card p {
+    line-height: 1.48;
+}
+
 .study-card:hover {
     border-color: rgba(36, 87, 214, .25);
     box-shadow: var(--shadow-md);
@@ -1516,8 +1530,9 @@ a {
 
 .resource-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
     gap: 1rem;
+    align-items: stretch;
 }
 
 .dictionary-live-status {
@@ -1676,8 +1691,9 @@ a {
     color: var(--ink);
     background: transparent;
     font: inherit;
-    font-size: 1.45rem;
+    font-size: clamp(1.05rem, 2.4vw, 1.45rem);
     font-weight: 750;
+    line-height: 1.35;
 }
 
 .vocabulary-search-input:focus {
@@ -2471,6 +2487,7 @@ a {
 
     .hero-panel {
         border-radius: .9rem;
+        padding: 1.25rem !important;
     }
 
     .hero-panel::after {
@@ -2479,7 +2496,8 @@ a {
     }
 
     .display-title {
-        font-size: 2.15rem;
+        font-size: clamp(1.85rem, 7.2vw, 2.25rem);
+        line-height: 1.1;
     }
 
     .hero-grid,
@@ -2741,6 +2759,19 @@ a {
 
     .main-content {
         padding-top: 1rem;
+    }
+
+    .hero-panel {
+        margin-bottom: 1rem;
+    }
+
+    .eyebrow {
+        font-size: .72rem;
+        letter-spacing: .075em;
+    }
+
+    .lead-copy {
+        font-size: .95rem;
     }
 
     .home-hero {
