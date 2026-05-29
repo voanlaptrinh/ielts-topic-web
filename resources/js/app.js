@@ -596,7 +596,28 @@ const publicShell = document.querySelector('[data-public-shell]');
 if (publicShell) {
     let content = publicShell.querySelector('[data-public-content]');
     const navbar = publicShell.querySelector('.navbar-nav');
+    const mainNavbar = publicShell.querySelector('#mainNavbar');
+    const menuToggle = publicShell.querySelector('.navbar-toggler');
     let activeController = null;
+
+    if (mainNavbar) {
+        mainNavbar.addEventListener('show.bs.collapse', () => document.body.classList.add('mobile-nav-open'));
+        mainNavbar.addEventListener('hide.bs.collapse', () => document.body.classList.remove('mobile-nav-open'));
+        mainNavbar.addEventListener('hidden.bs.collapse', () => document.body.classList.remove('mobile-nav-open'));
+    }
+
+    const closeMobileMenu = () => {
+        if (
+            !mainNavbar
+            || !menuToggle
+            || !mainNavbar.classList.contains('show')
+            || !window.matchMedia('(max-width: 991.98px)').matches
+        ) {
+            return;
+        }
+
+        menuToggle.click();
+    };
 
     const shouldHandlePublicUrl = (url) => {
         if (url.origin !== window.location.origin) {
@@ -722,6 +743,7 @@ if (publicShell) {
         }
 
         event.preventDefault();
+        closeMobileMenu();
         loadPublicPage(url);
     });
 

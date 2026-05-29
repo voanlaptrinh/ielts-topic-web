@@ -27,6 +27,10 @@
             </button>
 
             <div class="collapse navbar-collapse" id="mainNavbar">
+                <div class="mobile-nav-head">
+                    <a class="navbar-brand" href="{{ route('topics.index') }}">IELTS Focus</a>
+                    <button class="mobile-nav-close" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-label="Đóng menu">×</button>
+                </div>
                 <div class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
                     <a class="nav-link {{ request()->routeIs('topics.*') ? 'active' : '' }}" href="{{ route('topics.index') }}">Chủ đề</a>
                     <a class="nav-link {{ request()->routeIs('vocabularies.index', 'vocabularies.show') ? 'active' : '' }}" href="{{ route('vocabularies.index') }}">Từ vựng</a>
@@ -62,6 +66,7 @@
                     @endauth
                 </div>
             </div>
+            <button class="mobile-nav-backdrop" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-label="Đóng menu"></button>
         </div>
     </nav>
 
