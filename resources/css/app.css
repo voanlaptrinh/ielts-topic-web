@@ -707,6 +707,71 @@ a {
     align-items: center;
 }
 
+@media (max-width: 1199.98px) {
+    .nav-search {
+        width: 170px;
+        min-width: 140px;
+    }
+
+    .home-hero {
+        grid-template-columns: minmax(0, 1fr) minmax(360px, .9fr);
+    }
+
+    .home-topic-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        align-items: stretch !important;
+        padding-top: .75rem;
+    }
+
+    .nav-link {
+        min-height: 2.55rem;
+    }
+
+    .nav-search {
+        width: 100%;
+        min-width: 0;
+        margin: .45rem 0;
+    }
+
+    .home-hero {
+        grid-template-columns: 1fr;
+        padding-top: 1.5rem;
+    }
+
+    .home-hero-copy h1,
+    .home-hero-copy p {
+        max-width: none;
+    }
+
+    .home-hero-visual {
+        min-height: 310px;
+    }
+
+    .home-top-grid,
+    .home-two-columns,
+    .home-progress-grid,
+    .home-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-topic-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .site-footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 .today-panel,
 .weak-review-panel,
 .learning-command,
@@ -2061,8 +2126,21 @@ a {
         padding-top: 1.25rem;
     }
 
+    .home-hero-copy h1 {
+        font-size: 2.35rem;
+    }
+
+    .home-hero-copy p {
+        font-size: 1rem;
+        line-height: 1.65;
+    }
+
     .home-hero-visual {
-        min-height: 250px;
+        min-height: 220px;
+    }
+
+    .home-hero-visual img {
+        max-height: 280px;
     }
 
     .home-hero-actions .btn {
@@ -2088,6 +2166,26 @@ a {
     .empty-review-card,
     .support-card {
         grid-template-columns: 1fr;
+    }
+
+    .home-card {
+        border-radius: .9rem;
+    }
+
+    .home-stat-grid {
+        gap: .7rem;
+    }
+
+    .home-stat {
+        min-height: 145px;
+    }
+
+    .home-stat strong {
+        font-size: 1.45rem;
+    }
+
+    .home-topic-card img {
+        aspect-ratio: 16 / 9;
     }
 
     .section-heading-row {
@@ -2217,5 +2315,34 @@ a {
 
     .vocabulary-detail-panel-wide {
         grid-column: auto;
+    }
+}
+
+@media (max-width: 420px) {
+    .home-hero-copy h1 {
+        font-size: 2rem;
+    }
+
+    .home-stat-grid,
+    .home-feature-grid,
+    .home-faq-grid,
+    .learner-nav,
+    .admin-sidebar-nav {
+        grid-template-columns: 1fr;
+    }
+
+    .home-stat {
+        min-height: auto;
+    }
+
+    .home-plan-step {
+        grid-template-columns: 1.9rem minmax(0, 1fr);
+    }
+
+    .empty-review-illustration,
+    .support-illustration {
+        width: 5rem;
+        height: 5rem;
+        font-size: 2.7rem;
     }
 }
