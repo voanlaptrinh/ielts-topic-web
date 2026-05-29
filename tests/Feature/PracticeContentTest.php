@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\PracticeTest;
+use App\Models\TestAttempt;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -147,5 +148,47 @@ class PracticeContentTest extends TestCase
         $this->get('/search?q=band')
             ->assertOk()
             ->assertSee('Writing band criteria');
+    }
+
+    public function test_admin_can_review_writing_submission_and_user_sees_feedback(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $user = User::factory()->create();
+        $attempt = TestAttempt::create([
+            'user_id' => $user->id,
+            'test_type' => 'IELTS Writing',
+            'level' => 'intermediate',
+            'score' => 1,
+            'total' => 1,
+            'details' => [
+                [
+                    'word' => 'Write an essay about education.',
+                    'answer' => 'Technology can support teachers.',
+                    'correct' => 'Model guidance',
+                    'is_correct' => true,
+                    'explanation' => 'Review task response and examples.',
+                ],
+            ],
+        ]);
+
+        $this->actingAs($admin)->put("/admin/submissions/{$attempt->id}", [
+            'band_score' => 6.5,
+            'feedback' => 'Clear position, but examples need more depth.',
+            'task_response' => 6,
+            'coherence' => 7,
+            'lexical_resource' => 6.5,
+            'grammar' => 6,
+        ])->assertRedirect('/admin/submissions');
+
+        $this->assertDatabaseHas('test_attempts', [
+            'id' => $attempt->id,
+            'band_score' => 6.5,
+            'feedback' => 'Clear position, but examples need more depth.',
+            'reviewed_by' => $admin->id,
+        ]);
+
+        $this->actingAs($user)->get('/history')
+            ->assertOk()
+            ->assertSee('Clear position, but examples need more depth.');
     }
 }

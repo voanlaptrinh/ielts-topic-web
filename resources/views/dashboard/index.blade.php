@@ -71,6 +71,25 @@
         <section class="col-lg-5">
             <div class="card mb-4">
                 <div class="card-body">
+                    <h2 class="section-title">Feedback Writing/Speaking</h2>
+                    @if ($pendingReviews > 0)
+                        <div class="alert alert-warning mt-3 mb-3">{{ $pendingReviews }} bài đang chờ admin chấm.</div>
+                    @endif
+                    @forelse ($reviewedSubmissions as $submission)
+                        <article class="review-item mt-3">
+                            <span class="badge text-bg-success">{{ $submission->test_type }} · Band {{ $submission->band_score }}</span>
+                            <strong>{{ $submission->feedback }}</strong>
+                            @if ($submission->criteria_scores)
+                                <small>{{ collect($submission->criteria_scores)->map(fn ($score, $name) => str_replace('_', ' ', $name) . ': ' . $score)->implode(' · ') }}</small>
+                            @endif
+                        </article>
+                    @empty
+                        <div class="empty-state mt-3">Feedback Writing/Speaking sẽ hiện ở đây sau khi admin chấm.</div>
+                    @endforelse
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
                     <h2 class="section-title">Phân tích kỹ năng</h2>
                     <p class="text-muted mb-0">Kỹ năng cần ưu tiên: {{ $weakestSkill }}.</p>
                     @forelse ($skillBreakdown as $skill)

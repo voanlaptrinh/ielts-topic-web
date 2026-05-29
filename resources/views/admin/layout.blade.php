@@ -29,6 +29,9 @@
             <a class="{{ request()->routeIs('admin.practice-tests.*') ? 'active' : '' }}" href="{{ route('admin.practice-tests.index') }}">
                 <span>Đề Reading/Listening</span>
             </a>
+            <a class="{{ request()->routeIs('admin.submissions.*') ? 'active' : '' }}" href="{{ route('admin.submissions.index') }}">
+                <span>Chấm bài</span>
+            </a>
             <a class="{{ request()->routeIs('admin.vocabularies.*') ? 'active' : '' }}" href="{{ route('admin.vocabularies.index') }}">
                 <span>Từ vựng</span>
             </a>

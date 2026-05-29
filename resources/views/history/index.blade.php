@@ -51,9 +51,25 @@
                                 <div>
                                     <h3 class="h5">{{ $attempt->test_type }} - {{ $attempt->level }}</h3>
                                     <p class="mb-1"><strong>Điểm:</strong> {{ $attempt->score }} / {{ $attempt->total }}</p>
+                                    @if ($attempt->band_score)
+                                        <p class="mb-1"><strong>Band feedback:</strong> {{ $attempt->band_score }}</p>
+                                    @endif
                                 </div>
                                 <p class="text-muted mb-0">{{ $attempt->created_at->format('d/m/Y H:i') }}</p>
                             </div>
+
+                            @if ($attempt->feedback)
+                                <div class="alert alert-info mt-3">
+                                    <strong>Feedback từ admin:</strong> {{ $attempt->feedback }}
+                                    @if ($attempt->criteria_scores)
+                                        <div class="small mt-2">
+                                            {{ collect($attempt->criteria_scores)->map(fn ($score, $name) => str_replace('_', ' ', $name) . ': ' . $score)->implode(' · ') }}
+                                        </div>
+                                    @endif
+                                </div>
+                            @elseif (in_array($attempt->test_type, ['IELTS Writing', 'IELTS Speaking'], true))
+                                <div class="alert alert-warning mt-3">Bài này đang chờ admin chấm feedback.</div>
+                            @endif
 
                             @if ($wrongDetails->isNotEmpty())
                                 <h4 class="h6 mt-3">Lỗi sai cần xem lại</h4>

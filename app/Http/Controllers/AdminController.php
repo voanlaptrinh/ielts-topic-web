@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PracticeTest;
+use App\Models\TestAttempt;
 use App\Models\Topic;
 use App\Models\User;
 use App\Models\Vocabulary;
@@ -365,6 +366,61 @@ class AdminController extends Controller
         $user->update(['is_admin' => ! $user->is_admin]);
 
         return back()->with('status', 'Đã cập nhật quyền user.');
+    }
+
+    public function submissions(Request $request)
+    {
+        $status = $request->query('status', 'pending');
+
+        return view('admin.submissions.index', [
+            'submissions' => TestAttempt::query()
+                ->with(['user', 'reviewer'])
+                ->whereIn('test_type', ['IELTS Writing', 'IELTS Speaking'])
+                ->when($status === 'pending', fn ($query) => $query->whereNull('reviewed_at'))
+                ->when($status === 'reviewed', fn ($query) => $query->whereNotNull('reviewed_at'))
+                ->latest()
+                ->paginate(20)
+                ->withQueryString(),
+            'status' => $status,
+        ]);
+    }
+
+    public function editSubmission(TestAttempt $testAttempt)
+    {
+        abort_unless(in_array($testAttempt->test_type, ['IELTS Writing', 'IELTS Speaking'], true), 404);
+
+        return view('admin.submissions.form', [
+            'submission' => $testAttempt->load(['user', 'reviewer']),
+        ]);
+    }
+
+    public function updateSubmission(Request $request, TestAttempt $testAttempt)
+    {
+        abort_unless(in_array($testAttempt->test_type, ['IELTS Writing', 'IELTS Speaking'], true), 404);
+
+        $data = $request->validate([
+            'band_score' => ['required', 'numeric', 'min:0', 'max:9'],
+            'feedback' => ['required', 'string', 'max:5000'],
+            'task_response' => ['nullable', 'numeric', 'min:0', 'max:9'],
+            'coherence' => ['nullable', 'numeric', 'min:0', 'max:9'],
+            'lexical_resource' => ['nullable', 'numeric', 'min:0', 'max:9'],
+            'grammar' => ['nullable', 'numeric', 'min:0', 'max:9'],
+            'fluency' => ['nullable', 'numeric', 'min:0', 'max:9'],
+            'pronunciation' => ['nullable', 'numeric', 'min:0', 'max:9'],
+        ]);
+
+        $testAttempt->update([
+            'band_score' => $data['band_score'],
+            'feedback' => $data['feedback'],
+            'criteria_scores' => collect($data)
+                ->only(['task_response', 'coherence', 'lexical_resource', 'grammar', 'fluency', 'pronunciation'])
+                ->filter(fn ($value) => $value !== null)
+                ->all(),
+            'reviewed_by' => $request->user()->id,
+            'reviewed_at' => now(),
+        ]);
+
+        return redirect()->route('admin.submissions.index')->with('status', 'Đã gửi feedback cho học viên.');
     }
 
     private function lines(string $value): array

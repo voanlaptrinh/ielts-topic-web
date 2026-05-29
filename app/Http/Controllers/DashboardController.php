@@ -10,6 +10,16 @@ class DashboardController extends Controller
     {
         $user = $request->user();
         $attempts = $user->testAttempts()->latest()->take(12)->get();
+        $reviewedSubmissions = $user->testAttempts()
+            ->whereIn('test_type', ['IELTS Writing', 'IELTS Speaking'])
+            ->whereNotNull('reviewed_at')
+            ->latest('reviewed_at')
+            ->take(4)
+            ->get();
+        $pendingReviews = $user->testAttempts()
+            ->whereIn('test_type', ['IELTS Writing', 'IELTS Speaking'])
+            ->whereNull('reviewed_at')
+            ->count();
         $lookups = $user->wordLookupHistories()->latest()->take(10)->get();
         $totalQuestions = $attempts->sum('total');
         $totalScore = $attempts->sum('score');
@@ -52,6 +62,8 @@ class DashboardController extends Controller
             'skillBreakdown' => $skillBreakdown,
             'weakestSkill' => $weakestSkill,
             'roadmap' => $this->roadmapFor($user->target_band ?: '6.5'),
+            'reviewedSubmissions' => $reviewedSubmissions,
+            'pendingReviews' => $pendingReviews,
             'summary' => [
                 'attempts' => $attempts->count(),
                 'accuracy' => $accuracy,

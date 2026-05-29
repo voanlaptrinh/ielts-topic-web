@@ -102,6 +102,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/practice-tests/{practiceTest}', [AdminController::class, 'destroyPracticeTest'])->name('practice-tests.destroy');
     Route::get('/users', [AdminController::class, 'users'])->name('users.index');
     Route::put('/users/{user}/toggle-admin', [AdminController::class, 'toggleAdmin'])->name('users.toggle-admin');
+    Route::get('/submissions', [AdminController::class, 'submissions'])->name('submissions.index');
+    Route::get('/submissions/{testAttempt}/review', [AdminController::class, 'editSubmission'])->name('submissions.edit');
+    Route::put('/submissions/{testAttempt}', [AdminController::class, 'updateSubmission'])->name('submissions.update');
     Route::get('/vocabularies', [AdminController::class, 'vocabularies'])->name('vocabularies.index');
     Route::get('/vocabularies/create', [AdminController::class, 'createVocabulary'])->name('vocabularies.create');
     Route::post('/vocabularies', [AdminController::class, 'storeVocabulary'])->name('vocabularies.store');
