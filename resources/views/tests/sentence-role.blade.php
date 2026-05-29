@@ -1,13 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+    @php($durationSeconds = max(300, $questions->count() * 45))
     <header class="page-header">
         <h1>Bài test thành phần câu - {{ $config['name'] }}</h1>
         <p class="text-muted">{{ $config['band'] }}. Xác định cụm được gạch ra là chủ ngữ, vị ngữ, tân ngữ, bổ ngữ hay trạng ngữ.</p>
     </header>
 
-    <form method="POST" action="{{ route('tests.sentence-role.submit', $level) }}">
+    @include('shared._guest_save_notice')
+
+    <form method="POST" action="{{ route('tests.sentence-role.submit', $level) }}" data-timed-test data-duration-seconds="{{ $durationSeconds }}">
         @csrf
+        @include('tests._timer', ['durationSeconds' => $durationSeconds])
 
         <div class="vstack gap-3">
             @foreach ($questions as $index => $question)
@@ -22,6 +26,7 @@
                         <input type="hidden" name="targets[{{ $index }}]" value="{{ $question['target'] }}">
 
                         <div class="vstack gap-2 mt-3">
+                            <input type="hidden" name="answers[{{ $index }}]" value="Chưa chọn">
                             @foreach ($options as $option)
                                 <label class="form-check border rounded p-3">
                                     <input class="form-check-input ms-0 me-2" type="radio" name="answers[{{ $index }}]" value="{{ $option }}" required>

@@ -11,6 +11,23 @@
     </header>
 
     <section class="resource-list">
+        <article class="card study-card">
+            <div class="card-body d-flex flex-column">
+                <span class="badge text-bg-success align-self-start">Reading</span>
+                <h2 class="h5 mt-3">Luyện Reading theo dạng bài</h2>
+                <p class="text-muted flex-grow-1">Làm quen True/False/Not Given, headings, summary và cách đọc tìm ý chính.</p>
+                <a class="btn btn-primary align-self-start" href="{{ route('tests.reading') }}">Vào Reading</a>
+            </div>
+        </article>
+        <article class="card study-card">
+            <div class="card-body d-flex flex-column">
+                <span class="badge text-bg-success align-self-start">Listening</span>
+                <h2 class="h5 mt-3">Luyện Listening theo kỹ năng</h2>
+                <p class="text-muted flex-grow-1">Luyện bắt thông tin, chọn đáp án và theo dõi chỉ dẫn qua transcript/audio sau này.</p>
+                <a class="btn btn-primary align-self-start" href="{{ route('tests.listening') }}">Vào Listening</a>
+            </div>
+        </article>
+
         @foreach ($levels as $key => $level)
             <article class="card study-card">
                 <div class="card-body d-flex flex-column">

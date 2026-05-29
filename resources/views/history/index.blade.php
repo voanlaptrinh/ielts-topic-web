@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('dashboard.layout')
 
 @section('title', 'Tiến độ học tập - IELTS Focus')
 @section('meta_description', 'Dashboard tiến độ IELTS Focus giúp theo dõi điểm bài luyện, độ chính xác, lỗi sai và các từ đã tra gần đây.')
 
-@section('content')
+@section('dashboard_content')
     <header class="hero-panel p-4 p-lg-5">
         <span class="eyebrow">Lịch sử học tập</span>
         <h1 class="display-title">Tiến độ của {{ auth()->user()->name }}</h1>

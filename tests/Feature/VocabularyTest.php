@@ -60,6 +60,18 @@ class VocabularyTest extends TestCase
             ->assertDontSee('<html', false);
     }
 
+    public function test_flashcards_lazy_load_returns_partial(): void
+    {
+        $this->seed(VocabularySeeder::class);
+
+        $this->get('/vocabulary/flashcards?page=2', [
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])
+            ->assertOk()
+            ->assertSee('flashcard')
+            ->assertDontSee('<html', false);
+    }
+
     public function test_vocabulary_quiz_submission_is_scored_and_shows_wrong_answers(): void
     {
         [$sustainable, $allocate] = $this->createQuizWords();

@@ -1,0 +1,360 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\PracticeTest;
+use App\Models\Topic;
+use App\Models\User;
+use App\Models\Vocabulary;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+
+class AdminController extends Controller
+{
+    public function dashboard()
+    {
+        return view('admin.dashboard', [
+            'stats' => [
+                'topics' => Topic::count(),
+                'practiceTests' => PracticeTest::count(),
+                'vocabularies' => Vocabulary::count(),
+                'users' => User::count(),
+            ],
+            'recentTopics' => Topic::latest()->take(5)->get(),
+            'recentPracticeTests' => PracticeTest::latest()->take(5)->get(),
+            'recentWords' => Vocabulary::latest()->take(5)->get(),
+        ]);
+    }
+
+    public function topics()
+    {
+        return view('admin.topics.index', [
+            'topics' => Topic::orderBy('part')->orderBy('title')->paginate(20),
+        ]);
+    }
+
+    public function createTopic()
+    {
+        return view('admin.topics.form', [
+            'topic' => new Topic(),
+            'action' => route('admin.topics.store'),
+            'method' => 'POST',
+        ]);
+    }
+
+    public function storeTopic(Request $request)
+    {
+        Topic::create($this->topicData($request));
+
+        return redirect()->route('admin.topics.index')->with('status', 'Đã tạo topic mới.');
+    }
+
+    public function editTopic(Topic $topic)
+    {
+        return view('admin.topics.form', [
+            'topic' => $topic,
+            'action' => route('admin.topics.update', $topic),
+            'method' => 'PUT',
+        ]);
+    }
+
+    public function updateTopic(Request $request, Topic $topic)
+    {
+        $topic->update($this->topicData($request, $topic));
+
+        return redirect()->route('admin.topics.index')->with('status', 'Đã cập nhật topic.');
+    }
+
+    public function destroyTopic(Topic $topic)
+    {
+        $topic->delete();
+
+        return redirect()->route('admin.topics.index')->with('status', 'Đã xóa topic.');
+    }
+
+    public function vocabularies(Request $request)
+    {
+        $search = trim((string) $request->query('q'));
+
+        $words = Vocabulary::query()
+            ->when($search, fn ($query) => $query->where(function ($query) use ($search) {
+                $query->where('word', 'like', "%{$search}%")
+                    ->orWhere('meaning_vi', 'like', "%{$search}%")
+                    ->orWhere('topic', 'like', "%{$search}%");
+            }))
+            ->orderBy('word')
+            ->paginate(30)
+            ->withQueryString();
+
+        return view('admin.vocabularies.index', compact('words', 'search'));
+    }
+
+    public function createVocabulary()
+    {
+        return view('admin.vocabularies.form', [
+            'vocabulary' => new Vocabulary(),
+            'action' => route('admin.vocabularies.store'),
+            'method' => 'POST',
+        ]);
+    }
+
+    public function storeVocabulary(Request $request)
+    {
+        Vocabulary::create($this->vocabularyData($request));
+
+        return redirect()->route('admin.vocabularies.index')->with('status', 'Đã tạo từ vựng mới.');
+    }
+
+    public function editVocabulary(Vocabulary $vocabulary)
+    {
+        return view('admin.vocabularies.form', [
+            'vocabulary' => $vocabulary,
+            'action' => route('admin.vocabularies.update', $vocabulary),
+            'method' => 'PUT',
+        ]);
+    }
+
+    public function updateVocabulary(Request $request, Vocabulary $vocabulary)
+    {
+        $vocabulary->update($this->vocabularyData($request, $vocabulary));
+
+        return redirect()->route('admin.vocabularies.index')->with('status', 'Đã cập nhật từ vựng.');
+    }
+
+    public function destroyVocabulary(Vocabulary $vocabulary)
+    {
+        $vocabulary->delete();
+
+        return redirect()->route('admin.vocabularies.index')->with('status', 'Đã xóa từ vựng.');
+    }
+
+    public function practiceTests(Request $request)
+    {
+        $skill = $request->query('skill');
+
+        return view('admin.practice-tests.index', [
+            'tests' => PracticeTest::query()
+                ->when(in_array($skill, ['reading', 'listening'], true), fn ($query) => $query->where('skill', $skill))
+                ->withCount('questions')
+                ->latest()
+                ->paginate(20)
+                ->withQueryString(),
+            'skill' => $skill,
+        ]);
+    }
+
+    public function createPracticeTest()
+    {
+        return view('admin.practice-tests.form', [
+            'practiceTest' => new PracticeTest([
+                'skill' => 'reading',
+                'level' => 'intermediate',
+                'duration_minutes' => 20,
+                'is_published' => true,
+            ]),
+            'questions' => collect(),
+            'action' => route('admin.practice-tests.store'),
+            'method' => 'POST',
+        ]);
+    }
+
+    public function storePracticeTest(Request $request)
+    {
+        $data = $this->practiceTestData($request);
+        $data['audio_path'] = $this->storeAudio($request);
+
+        $practiceTest = PracticeTest::create($data);
+        $this->syncPracticeQuestions($practiceTest, $request);
+
+        return redirect()->route('admin.practice-tests.index')->with('status', 'Đã tạo đề luyện tập.');
+    }
+
+    public function editPracticeTest(PracticeTest $practiceTest)
+    {
+        return view('admin.practice-tests.form', [
+            'practiceTest' => $practiceTest,
+            'questions' => $practiceTest->questions()->get(),
+            'action' => route('admin.practice-tests.update', $practiceTest),
+            'method' => 'PUT',
+        ]);
+    }
+
+    public function updatePracticeTest(Request $request, PracticeTest $practiceTest)
+    {
+        $data = $this->practiceTestData($request, $practiceTest);
+        $audioPath = $this->storeAudio($request);
+
+        if ($audioPath) {
+            if ($practiceTest->audio_path) {
+                Storage::disk('public')->delete($practiceTest->audio_path);
+            }
+
+            $data['audio_path'] = $audioPath;
+        }
+
+        $practiceTest->update($data);
+        $this->syncPracticeQuestions($practiceTest, $request);
+
+        return redirect()->route('admin.practice-tests.index')->with('status', 'Đã cập nhật đề luyện tập.');
+    }
+
+    public function destroyPracticeTest(PracticeTest $practiceTest)
+    {
+        if ($practiceTest->audio_path) {
+            Storage::disk('public')->delete($practiceTest->audio_path);
+        }
+
+        $practiceTest->delete();
+
+        return redirect()->route('admin.practice-tests.index')->with('status', 'Đã xóa đề luyện tập.');
+    }
+
+    private function topicData(Request $request, ?Topic $topic = null): array
+    {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('topics', 'slug')->ignore($topic)],
+            'description' => ['required', 'string'],
+            'part' => ['required', 'string', 'max:20'],
+            'difficulty' => ['required', 'string', 'max:20'],
+            'questions_text' => ['required', 'string'],
+            'sample_answer' => ['required', 'string'],
+            'tips_text' => ['nullable', 'string'],
+        ]);
+
+        return [
+            'title' => $data['title'],
+            'slug' => $data['slug'] ?: Str::slug($data['title']),
+            'description' => $data['description'],
+            'part' => $data['part'],
+            'difficulty' => $data['difficulty'],
+            'questions' => $this->lines($data['questions_text']),
+            'sample_answer' => $data['sample_answer'],
+            'tips' => $this->lines($data['tips_text'] ?? ''),
+        ];
+    }
+
+    private function vocabularyData(Request $request, ?Vocabulary $vocabulary = null): array
+    {
+        $data = $request->validate([
+            'word' => ['required', 'string', 'max:255', Rule::unique('vocabularies', 'word')->ignore($vocabulary)],
+            'phonetic' => ['nullable', 'string', 'max:255'],
+            'part_of_speech' => ['required', 'string', 'max:255'],
+            'meaning_vi' => ['required', 'string'],
+            'definition_en' => ['required', 'string'],
+            'example_en' => ['required', 'string'],
+            'example_vi' => ['required', 'string'],
+            'topic' => ['nullable', 'string', 'max:255'],
+            'level' => ['required', 'string', 'max:20'],
+            'synonyms_text' => ['nullable', 'string'],
+        ]);
+
+        return [
+            'word' => $data['word'],
+            'phonetic' => $data['phonetic'] ?? null,
+            'part_of_speech' => $data['part_of_speech'],
+            'meaning_vi' => $data['meaning_vi'],
+            'definition_en' => $data['definition_en'],
+            'example_en' => $data['example_en'],
+            'example_vi' => $data['example_vi'],
+            'topic' => $data['topic'] ?? null,
+            'level' => $data['level'],
+            'synonyms' => $this->items($data['synonyms_text'] ?? ''),
+        ];
+    }
+
+    private function practiceTestData(Request $request, ?PracticeTest $practiceTest = null): array
+    {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('practice_tests', 'slug')->ignore($practiceTest)],
+            'skill' => ['required', Rule::in(['reading', 'listening'])],
+            'level' => ['required', 'string', 'max:50'],
+            'duration_minutes' => ['required', 'integer', 'min:1', 'max:180'],
+            'description' => ['nullable', 'string'],
+            'passage' => ['nullable', 'string'],
+            'transcript' => ['nullable', 'string'],
+            'audio_file' => ['nullable', 'file', 'mimes:mp3,wav,ogg,m4a,mp4', 'max:20480'],
+            'is_published' => ['nullable', 'boolean'],
+        ]);
+
+        return [
+            'title' => $data['title'],
+            'slug' => $data['slug'] ?: Str::slug($data['title']),
+            'skill' => $data['skill'],
+            'level' => $data['level'],
+            'duration_minutes' => $data['duration_minutes'],
+            'description' => $data['description'] ?? null,
+            'passage' => $data['passage'] ?? null,
+            'transcript' => $data['transcript'] ?? null,
+            'is_published' => $request->boolean('is_published'),
+        ];
+    }
+
+    private function syncPracticeQuestions(PracticeTest $practiceTest, Request $request): void
+    {
+        $data = $request->validate([
+            'questions' => ['required', 'array', 'min:1'],
+            'questions.*.prompt' => ['nullable', 'string', 'max:2000'],
+            'questions.*.question_type' => ['nullable', Rule::in(['multiple_choice', 'short_answer'])],
+            'questions.*.options_text' => ['nullable', 'string', 'max:2000'],
+            'questions.*.correct_answer' => ['nullable', 'string', 'max:1000'],
+            'questions.*.explanation' => ['nullable', 'string', 'max:3000'],
+        ]);
+
+        $questions = collect($data['questions'])
+            ->map(function (array $question, int $index) {
+                $prompt = trim((string) ($question['prompt'] ?? ''));
+                $correctAnswer = trim((string) ($question['correct_answer'] ?? ''));
+
+                if ($prompt === '' || $correctAnswer === '') {
+                    return null;
+                }
+
+                return [
+                    'position' => $index + 1,
+                    'question_type' => $question['question_type'] ?? 'multiple_choice',
+                    'prompt' => $prompt,
+                    'options' => $this->lines($question['options_text'] ?? ''),
+                    'correct_answer' => $correctAnswer,
+                    'explanation' => trim((string) ($question['explanation'] ?? '')) ?: null,
+                ];
+            })
+            ->filter()
+            ->values();
+
+        abort_if($questions->isEmpty(), 422, 'Cần ít nhất 1 câu hỏi có đầy đủ đề bài và đáp án.');
+
+        $practiceTest->questions()->delete();
+        $practiceTest->questions()->createMany($questions->all());
+    }
+
+    private function storeAudio(Request $request): ?string
+    {
+        if (! $request->hasFile('audio_file')) {
+            return null;
+        }
+
+        return $request->file('audio_file')->store('practice-audio', 'public');
+    }
+
+    private function lines(string $value): array
+    {
+        return collect(preg_split('/\r\n|\r|\n/', $value) ?: [])
+            ->map(fn ($item) => trim($item))
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    private function items(string $value): array
+    {
+        return collect(preg_split('/,|\r\n|\r|\n/', $value) ?: [])
+            ->map(fn ($item) => trim($item))
+            ->filter()
+            ->values()
+            ->all();
+    }
+}

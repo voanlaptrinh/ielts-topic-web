@@ -79,7 +79,7 @@
                     </div>
                 </form>
 
-                <div class="vocabulary-results-wrap" data-vocabulary-results>
+                <div class="vocabulary-results-wrap" data-vocabulary-results data-lazy-list>
                     @include('vocabularies._results')
                 </div>
             </div>

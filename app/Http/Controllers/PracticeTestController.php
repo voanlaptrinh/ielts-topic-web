@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DictionaryEntry;
+use App\Models\PracticeTest;
 use App\Models\TestAttempt;
 use App\Models\Vocabulary;
 use Illuminate\Http\Request;
@@ -15,6 +16,72 @@ class PracticeTestController extends Controller
     {
         return view('tests.index', [
             'levels' => $this->levels(),
+        ]);
+    }
+
+    public function reading()
+    {
+        return view('tests.reading', [
+            'tests' => $this->publishedPracticeTests('reading'),
+            'tasks' => [
+                ['type' => 'True / False / Not Given', 'focus' => 'Xác định thông tin đúng, sai hoặc không được nhắc đến.'],
+                ['type' => 'Matching Headings', 'focus' => 'Chọn tiêu đề bao quát ý chính của đoạn.'],
+                ['type' => 'Summary Completion', 'focus' => 'Điền từ/cụm từ phù hợp vào tóm tắt.'],
+            ],
+        ]);
+    }
+
+    public function listening()
+    {
+        return view('tests.listening', [
+            'tests' => $this->publishedPracticeTests('listening'),
+            'tasks' => [
+                ['type' => 'Form Completion', 'focus' => 'Nghe số, tên riêng, địa điểm và thông tin ngắn.'],
+                ['type' => 'Multiple Choice', 'focus' => 'Bắt ý chính và chi tiết gây nhiễu.'],
+                ['type' => 'Map / Diagram Labelling', 'focus' => 'Theo dõi chỉ dẫn không gian và vị trí.'],
+            ],
+        ]);
+    }
+
+    public function showPracticeTest(string $skill, PracticeTest $practiceTest)
+    {
+        abort_if($practiceTest->skill !== $skill || ! $practiceTest->is_published, 404);
+
+        return view('tests.practice', [
+            'practiceTest' => $practiceTest->load('questions'),
+        ]);
+    }
+
+    public function submitPracticeTest(Request $request, string $skill, PracticeTest $practiceTest)
+    {
+        abort_if($practiceTest->skill !== $skill || ! $practiceTest->is_published, 404);
+
+        $answers = $this->validatedAnswers($request);
+        $questions = $practiceTest->questions()->get()->keyBy('id');
+        $results = [];
+        $score = 0;
+
+        foreach ($questions as $question) {
+            $answer = $answers[$question->id] ?? 'Chưa chọn';
+            $isCorrect = $this->normalizeAnswer($answer) === $this->normalizeAnswer($question->correct_answer);
+            $score += $isCorrect ? 1 : 0;
+            $results[] = [
+                'word' => $question->prompt,
+                'answer' => $answer,
+                'correct' => $question->correct_answer,
+                'is_correct' => $isCorrect,
+                'explanation' => ($isCorrect ? 'Đúng. ' : 'Sai. ') . ($question->explanation ?: 'Đáp án đúng là: ' . $question->correct_answer),
+            ];
+        }
+
+        $this->recordAttempt($practiceTest->skill === 'reading' ? 'IELTS Reading' : 'IELTS Listening', $practiceTest->level, $score, count($results), $results);
+
+        return view('tests.result', [
+            'title' => 'Kết quả - ' . $practiceTest->title,
+            'score' => $score,
+            'total' => count($results),
+            'results' => $results,
+            'level' => $practiceTest->level,
         ]);
     }
 
@@ -1131,6 +1198,20 @@ class PracticeTestController extends Controller
         ];
     }
 
+    private function publishedPracticeTests(string $skill)
+    {
+        return PracticeTest::where('skill', $skill)
+            ->where('is_published', true)
+            ->withCount('questions')
+            ->latest()
+            ->paginate(12);
+    }
+
+    private function normalizeAnswer(string $answer): string
+    {
+        return strtolower(trim(preg_replace('/\s+/', ' ', $answer) ?? $answer));
+    }
+
     private function recordAttempt(string $testType, string $level, int $score, int $total, array $results): void
     {
         if (! auth()->check()) {
@@ -1140,7 +1221,7 @@ class PracticeTestController extends Controller
         TestAttempt::create([
             'user_id' => auth()->id(),
             'test_type' => $testType,
-            'level' => $this->levelConfig($level)['name'],
+            'level' => $this->levels()[$level]['name'] ?? $level,
             'score' => $score,
             'total' => $total,
             'details' => $results,

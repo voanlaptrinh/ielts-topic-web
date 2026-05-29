@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TopicSeeder::class,
             VocabularySeeder::class,
+            PracticeTestSeeder::class,
             DictionaryEntrySeeder::class,
         ]);
     }

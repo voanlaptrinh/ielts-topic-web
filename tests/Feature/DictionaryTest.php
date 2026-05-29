@@ -167,8 +167,35 @@ class DictionaryTest extends TestCase
             'target' => 'vi',
         ])
             ->assertStatus(503)
+            ->assertJsonPath('message', 'Chưa cấu hình GOOGLE_TRANSLATE_API_KEY trong .env. Hiện chỉ dịch nội bộ được các từ/cụm từ có trong dữ liệu.');
+    }
+
+    public function test_dictionary_translate_falls_back_to_local_vocabulary_without_api_key(): void
+    {
+        config(['services.google_translate.key' => null]);
+
+        Vocabulary::create([
+            'word' => 'sustainable',
+            'phonetic' => '/test/',
+            'part_of_speech' => 'adjective',
+            'meaning_vi' => 'bền vững',
+            'definition_en' => 'able to continue for a long time',
+            'example_en' => 'Sustainable transport is important.',
+            'example_vi' => 'Giao thông bền vững rất quan trọng.',
+            'topic' => 'Environment',
+            'level' => 'B2',
+        ]);
+
+        $this->postJson('/dictionary/translate', [
+            'q' => 'sustainable',
+            'source' => 'en',
+            'target' => 'vi',
+        ])
+            ->assertOk()
             ->assertJson([
-                'message' => 'Chưa cấu hình GOOGLE_TRANSLATE_API_KEY trong .env.',
+                'translatedText' => 'bền vững',
+                'detectedSourceLanguage' => 'local',
+                'source' => 'IELTS Focus vocabulary',
             ]);
     }
 

@@ -35,6 +35,19 @@
         </div>
     </header>
 
+    @guest
+        <section class="guest-save-notice mb-4">
+            <div>
+                <strong>Kết quả này chỉ hiển thị trong phiên hiện tại.</strong>
+                <span>Đăng nhập để các lần làm bài sau được lưu vào dashboard, kèm lỗi sai cần ôn.</span>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-primary btn-sm" href="{{ route('login') }}">Đăng nhập</a>
+                <a class="btn btn-outline-primary btn-sm" href="{{ route('register') }}">Tạo tài khoản</a>
+            </div>
+        </section>
+    @endguest
+
     <div class="vstack gap-3">
         @foreach ($results as $index => $result)
             <article class="card">

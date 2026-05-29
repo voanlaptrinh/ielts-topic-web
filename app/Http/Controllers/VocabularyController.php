@@ -27,7 +27,11 @@ class VocabularyController extends Controller
 
     public function flashcards()
     {
-        $words = Vocabulary::orderBy('word')->get();
+        $words = Vocabulary::orderBy('word')->paginate(24);
+
+        if (request()->ajax()) {
+            return view('vocabularies._flashcards', compact('words'));
+        }
 
         return view('vocabularies.flashcards', compact('words'));
     }

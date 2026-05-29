@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('history.index'));
+        return redirect()->intended(route('dashboard'));
     }
 
     public function showRegister()
@@ -45,11 +45,12 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::min(6)],
         ]);
 
+        $data['is_admin'] = ! User::where('is_admin', true)->exists();
         $user = User::create($data);
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('history.index');
+        return redirect()->route('dashboard');
     }
 
     public function logout(Request $request)

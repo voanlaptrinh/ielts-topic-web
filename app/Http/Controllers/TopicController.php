@@ -11,6 +11,10 @@ class TopicController extends Controller
 {
     public function index()
     {
+        if (auth()->check()) {
+            return redirect()->route('dashboard');
+        }
+
         $topics = Topic::orderBy('part')->orderBy('title')->get();
         $stats = [
             'topics' => Topic::count(),

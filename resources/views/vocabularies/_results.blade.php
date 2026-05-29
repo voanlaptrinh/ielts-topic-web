@@ -92,3 +92,11 @@
         @endif
     </nav>
 @endif
+
+@if ($words->hasMorePages())
+    <div class="load-more-wrap vocabulary-load-more">
+        <button class="btn btn-outline-primary" type="button" data-lazy-load-more data-next-url="{{ $words->nextPageUrl() }}">
+            Tải thêm từ vựng
+        </button>
+    </div>
+@endif

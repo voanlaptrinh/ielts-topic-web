@@ -14,6 +14,10 @@
         @endauth
     </header>
 
+    @guest
+        @include('shared._guest_save_notice')
+    @endguest
+
     @if ($wrongResults->isNotEmpty())
         <section class="card p-3 mb-3">
             <h2 class="h4">Các lỗi cần xem lại</h2>

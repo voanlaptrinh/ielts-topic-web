@@ -36,8 +36,14 @@ class DictionaryController extends Controller
         $apiKey = config('services.google_translate.key');
 
         if (! $apiKey) {
+            $fallback = $this->localTranslation($payload['q']);
+
+            if ($fallback) {
+                return response()->json($fallback);
+            }
+
             return response()->json([
-                'message' => 'Chưa cấu hình GOOGLE_TRANSLATE_API_KEY trong .env.',
+                'message' => 'Chưa cấu hình GOOGLE_TRANSLATE_API_KEY trong .env. Hiện chỉ dịch nội bộ được các từ/cụm từ có trong dữ liệu.',
             ], 503);
         }
 
@@ -56,6 +62,12 @@ class DictionaryController extends Controller
             ->post(config('services.google_translate.endpoint') . '?key=' . urlencode($apiKey), $body);
 
         if (! $response->successful()) {
+            $fallback = $this->localTranslation($payload['q']);
+
+            if ($fallback) {
+                return response()->json($fallback);
+            }
+
             return response()->json([
                 'message' => 'Google Translate API chưa trả về bản dịch. Kiểm tra API key, billing hoặc quyền Cloud Translation API.',
             ], 502);
@@ -74,6 +86,44 @@ class DictionaryController extends Controller
             'translatedText' => html_entity_decode($translation, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
             'detectedSourceLanguage' => $detectedSource,
         ]);
+    }
+
+    private function localTranslation(string $text): ?array
+    {
+        $query = $this->normalizeSearch($text);
+
+        if ($query === '') {
+            return null;
+        }
+
+        $vocabulary = Vocabulary::query()
+            ->whereRaw('LOWER(word) = ?', [$query])
+            ->orWhereRaw('LOWER(meaning_vi) = ?', [$query])
+            ->first();
+
+        if ($vocabulary) {
+            return [
+                'translatedText' => $vocabulary->meaning_vi,
+                'detectedSourceLanguage' => 'local',
+                'source' => 'IELTS Focus vocabulary',
+            ];
+        }
+
+        $entry = DictionaryEntry::query()
+            ->where('normalized_word', $query)
+            ->whereNotNull('definition_vi')
+            ->orderBy('id')
+            ->first();
+
+        if ($entry?->definition_vi) {
+            return [
+                'translatedText' => $entry->definition_vi,
+                'detectedSourceLanguage' => 'local',
+                'source' => 'IELTS Focus dictionary',
+            ];
+        }
+
+        return null;
     }
 
     private function searchData(Request $request): array

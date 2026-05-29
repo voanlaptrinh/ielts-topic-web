@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PracticeTestController;
 use App\Http\Controllers\VocabularyController;
+use App\Models\PracticeTest;
 use App\Models\Topic;
 use App\Models\Vocabulary;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +25,8 @@ Route::get('/sitemap.xml', function () {
         route('vocabularies.quiz'),
         route('dictionary.index'),
         route('tests.index'),
+        route('tests.reading'),
+        route('tests.listening'),
     ]);
 
     $levelUrls = collect([
@@ -41,9 +46,16 @@ Route::get('/sitemap.xml', function () {
         ->pluck('word')
         ->map(fn (string $word) => route('vocabularies.show', $word));
 
+    $practiceUrls = PracticeTest::where('is_published', true)
+        ->orderBy('skill')
+        ->orderBy('slug')
+        ->get(['skill', 'slug'])
+        ->map(fn (PracticeTest $test) => route('tests.practice.show', [$test->skill, $test]));
+
     $urls = $staticUrls
         ->merge($levelUrls)
         ->merge($topicUrls)
+        ->merge($practiceUrls)
         ->merge($vocabularyUrls)
         ->unique()
         ->values();
@@ -61,7 +73,31 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
+Route::put('/dashboard/goal', [DashboardController::class, 'updateGoal'])->middleware('auth')->name('dashboard.goal');
 Route::get('/history', [HistoryController::class, 'index'])->middleware('auth')->name('history.index');
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/topics', [AdminController::class, 'topics'])->name('topics.index');
+    Route::get('/topics/create', [AdminController::class, 'createTopic'])->name('topics.create');
+    Route::post('/topics', [AdminController::class, 'storeTopic'])->name('topics.store');
+    Route::get('/topics/{topic}/edit', [AdminController::class, 'editTopic'])->name('topics.edit');
+    Route::put('/topics/{topic}', [AdminController::class, 'updateTopic'])->name('topics.update');
+    Route::delete('/topics/{topic}', [AdminController::class, 'destroyTopic'])->name('topics.destroy');
+    Route::get('/practice-tests', [AdminController::class, 'practiceTests'])->name('practice-tests.index');
+    Route::get('/practice-tests/create', [AdminController::class, 'createPracticeTest'])->name('practice-tests.create');
+    Route::post('/practice-tests', [AdminController::class, 'storePracticeTest'])->name('practice-tests.store');
+    Route::get('/practice-tests/{practiceTest}/edit', [AdminController::class, 'editPracticeTest'])->name('practice-tests.edit');
+    Route::put('/practice-tests/{practiceTest}', [AdminController::class, 'updatePracticeTest'])->name('practice-tests.update');
+    Route::delete('/practice-tests/{practiceTest}', [AdminController::class, 'destroyPracticeTest'])->name('practice-tests.destroy');
+    Route::get('/vocabularies', [AdminController::class, 'vocabularies'])->name('vocabularies.index');
+    Route::get('/vocabularies/create', [AdminController::class, 'createVocabulary'])->name('vocabularies.create');
+    Route::post('/vocabularies', [AdminController::class, 'storeVocabulary'])->name('vocabularies.store');
+    Route::get('/vocabularies/{vocabulary}/edit', [AdminController::class, 'editVocabulary'])->name('vocabularies.edit');
+    Route::put('/vocabularies/{vocabulary}', [AdminController::class, 'updateVocabulary'])->name('vocabularies.update');
+    Route::delete('/vocabularies/{vocabulary}', [AdminController::class, 'destroyVocabulary'])->name('vocabularies.destroy');
+});
 
 Route::get('/vocabulary', [VocabularyController::class, 'index'])->name('vocabularies.index');
 Route::get('/vocabulary/search', [VocabularyController::class, 'search'])->name('vocabularies.search');
@@ -76,6 +112,10 @@ Route::post('/dictionary/translate', [DictionaryController::class, 'translate'])
 Route::get('/dictionary/{word}', [DictionaryController::class, 'show'])->name('dictionary.show');
 
 Route::get('/tests', [PracticeTestController::class, 'index'])->name('tests.index');
+Route::get('/tests/reading', [PracticeTestController::class, 'reading'])->name('tests.reading');
+Route::get('/tests/listening', [PracticeTestController::class, 'listening'])->name('tests.listening');
+Route::get('/tests/{skill}/{practiceTest}', [PracticeTestController::class, 'showPracticeTest'])->whereIn('skill', ['reading', 'listening'])->name('tests.practice.show');
+Route::post('/tests/{skill}/{practiceTest}', [PracticeTestController::class, 'submitPracticeTest'])->whereIn('skill', ['reading', 'listening'])->name('tests.practice.submit');
 Route::get('/tests/levels/{level}', [PracticeTestController::class, 'level'])->name('tests.level');
 Route::get('/tests/levels/{level}/vocabulary', [PracticeTestController::class, 'vocabulary'])->name('tests.vocabulary');
 Route::post('/tests/levels/{level}/vocabulary', [PracticeTestController::class, 'submitVocabulary'])->name('tests.vocabulary.submit');

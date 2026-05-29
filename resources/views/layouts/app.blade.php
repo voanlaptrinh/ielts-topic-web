@@ -18,7 +18,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-<div class="app-shell">
+<div class="app-shell" data-public-shell>
     <nav class="navbar navbar-expand-lg border-bottom sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('topics.index') }}">IELTS Focus</a>
@@ -34,7 +34,10 @@
                     <a class="nav-link {{ request()->routeIs('vocabularies.flashcards') ? 'active' : '' }}" href="{{ route('vocabularies.flashcards') }}">Flashcard</a>
                     <a class="nav-link {{ request()->routeIs('tests.*') ? 'active' : '' }}" href="{{ route('tests.index') }}">Luyện bài</a>
                     @auth
-                        <a class="nav-link {{ request()->routeIs('history.*') ? 'active' : '' }}" href="{{ route('history.index') }}">Tiến độ</a>
+                        <a class="nav-link {{ request()->routeIs('dashboard', 'history.*') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
+                        @if (auth()->user()->isAdmin())
+                            <a class="nav-link {{ request()->routeIs('admin.*') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Admin</a>
+                        @endif
                         <form method="POST" action="{{ route('logout') }}" class="ms-lg-2 mt-2 mt-lg-0">
                             @csrf
                             <button class="btn btn-outline-primary btn-sm" type="submit">Đăng xuất</button>
@@ -48,7 +51,7 @@
         </div>
     </nav>
 
-    <main class="container main-content">
+    <main class="container main-content" data-public-content>
         @yield('content')
     </main>
 

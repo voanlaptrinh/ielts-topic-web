@@ -40,6 +40,8 @@ class PracticeTestTest extends TestCase
         $this->get('/tests')
             ->assertOk()
             ->assertSee('6 cấp độ luyện IELTS')
+            ->assertSee('Luyện Reading theo dạng bài')
+            ->assertSee('Luyện Listening theo kỹ năng')
             ->assertSee('Cấp 1 - Foundation')
             ->assertSee('Cấp 6 - Advanced');
 
@@ -47,6 +49,16 @@ class PracticeTestTest extends TestCase
             ->assertOk()
             ->assertSee('Cấp 1 - Foundation')
             ->assertSee('Chọn nghĩa đúng');
+
+        $this->get('/tests/reading')
+            ->assertOk()
+            ->assertSee('IELTS Reading')
+            ->assertSee('True / False / Not Given');
+
+        $this->get('/tests/listening')
+            ->assertOk()
+            ->assertSee('IELTS Listening')
+            ->assertSee('Form Completion');
     }
 
     public function test_extended_practice_pages_are_available(): void

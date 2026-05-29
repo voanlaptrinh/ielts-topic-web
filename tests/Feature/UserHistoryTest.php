@@ -61,5 +61,39 @@ class UserHistoryTest extends TestCase
             ->assertSee('Lịch sử học tập')
             ->assertSee('run')
             ->assertSee('Từ vựng');
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertSee('Không gian học cá nhân')
+            ->assertSee('Lỗi cần xem lại')
+            ->assertSee('sustainable');
+    }
+
+    public function test_user_can_update_learning_goal(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->put('/dashboard/goal', [
+                'target_band' => '7.0',
+                'study_minutes_per_day' => 45,
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'target_band' => '7.0',
+            'study_minutes_per_day' => '45',
+        ]);
+    }
+
+    public function test_authenticated_user_home_redirects_to_dashboard(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get('/')
+            ->assertRedirect('/dashboard');
     }
 }
