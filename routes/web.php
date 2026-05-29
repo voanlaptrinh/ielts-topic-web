@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PracticeTestController;
+use App\Http\Controllers\PrepHubController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\VocabularyController;
 use App\Models\PracticeTest;
@@ -25,6 +26,7 @@ Route::get('/sitemap.xml', function () {
         route('vocabularies.flashcards'),
         route('vocabularies.quiz'),
         route('dictionary.index'),
+        route('prep.index'),
         route('search.index'),
         route('tests.index'),
         route('tests.reading'),
@@ -70,6 +72,7 @@ Route::get('/sitemap.xml', function () {
 })->name('sitemap');
 
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+Route::get('/ielts-prep', [PrepHubController::class, 'index'])->name('prep.index');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

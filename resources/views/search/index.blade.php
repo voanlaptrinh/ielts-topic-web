@@ -18,7 +18,18 @@
 
     @if ($query !== '')
         <div class="row g-4">
-            <section class="col-lg-4">
+            <section class="col-lg-3">
+                <h2 class="section-title">Prep Hub</h2>
+                @forelse ($prepMatches as $item)
+                    <a class="admin-list-item mt-2" href="{{ $item['route'] }}">
+                        <strong>{{ $item['title'] }}</strong>
+                        <span>{{ $item['description'] }}</span>
+                    </a>
+                @empty
+                    <div class="empty-state mt-2">Không có tài liệu phù hợp.</div>
+                @endforelse
+            </section>
+            <section class="col-lg-3">
                 <h2 class="section-title">Topic</h2>
                 @forelse ($topics as $topic)
                     <a class="admin-list-item mt-2" href="{{ route('topics.show', $topic->slug) }}">
@@ -29,7 +40,7 @@
                     <div class="empty-state mt-2">Không có topic phù hợp.</div>
                 @endforelse
             </section>
-            <section class="col-lg-4">
+            <section class="col-lg-3">
                 <h2 class="section-title">Từ vựng</h2>
                 @forelse ($vocabularies as $word)
                     <a class="admin-list-item mt-2" href="{{ route('vocabularies.show', $word->word) }}">
@@ -40,7 +51,7 @@
                     <div class="empty-state mt-2">Không có từ vựng phù hợp.</div>
                 @endforelse
             </section>
-            <section class="col-lg-4">
+            <section class="col-lg-3">
                 <h2 class="section-title">Đề luyện</h2>
                 @forelse ($practiceTests as $test)
                     <a class="admin-list-item mt-2" href="{{ route('tests.practice.show', [$test->skill, $test]) }}">

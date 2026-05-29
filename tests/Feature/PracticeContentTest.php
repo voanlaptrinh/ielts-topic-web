@@ -135,4 +135,17 @@ class PracticeContentTest extends TestCase
             ->assertOk()
             ->assertSee('Environment Writing');
     }
+
+    public function test_prep_hub_is_available_and_searchable(): void
+    {
+        $this->get('/ielts-prep')
+            ->assertOk()
+            ->assertSee('IELTS Prep Hub')
+            ->assertSee('Band criteria')
+            ->assertSee('Mock test');
+
+        $this->get('/search?q=band')
+            ->assertOk()
+            ->assertSee('Writing band criteria');
+    }
 }
