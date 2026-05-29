@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
 {
@@ -93,5 +94,27 @@ class DashboardController extends Controller
         $request->user()->update($data);
 
         return back()->with('status', 'Đã cập nhật mục tiêu học tập.');
+    }
+
+    public function account(Request $request)
+    {
+        return view('dashboard.account', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function updateAccount(Request $request)
+    {
+        $user = $request->user();
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user)],
+            'target_band' => ['nullable', 'string', 'max:10'],
+            'study_minutes_per_day' => ['required', 'integer', 'min:10', 'max:180'],
+        ]);
+
+        $user->update($data);
+
+        return back()->with('status', 'Đã cập nhật tài khoản.');
     }
 }

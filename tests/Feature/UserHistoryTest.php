@@ -88,6 +88,36 @@ class UserHistoryTest extends TestCase
         ]);
     }
 
+    public function test_user_can_manage_account_from_account_page(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'Old Name',
+            'email' => 'old@example.com',
+        ]);
+
+        $this->actingAs($user)
+            ->get('/account')
+            ->assertOk()
+            ->assertSee('Old Name');
+
+        $this->actingAs($user)
+            ->put('/account', [
+                'name' => 'New Name',
+                'email' => 'new@example.com',
+                'target_band' => '7.5',
+                'study_minutes_per_day' => 60,
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'New Name',
+            'email' => 'new@example.com',
+            'target_band' => '7.5',
+            'study_minutes_per_day' => 60,
+        ]);
+    }
+
     public function test_authenticated_user_home_redirects_to_dashboard(): void
     {
         $user = User::factory()->create();

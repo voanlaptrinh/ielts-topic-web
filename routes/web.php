@@ -84,6 +84,8 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::put('/dashboard/goal', [DashboardController::class, 'updateGoal'])->middleware('auth')->name('dashboard.goal');
+Route::get('/account', [DashboardController::class, 'account'])->middleware('auth')->name('account.index');
+Route::put('/account', [DashboardController::class, 'updateAccount'])->middleware('auth')->name('account.update');
 Route::get('/history', [HistoryController::class, 'index'])->middleware('auth')->name('history.index');
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
