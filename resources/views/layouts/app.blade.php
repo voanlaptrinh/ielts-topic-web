@@ -14,6 +14,9 @@
     <meta property="og:description" content="@yield('meta_description', 'IELTS Focus giúp người học Việt Nam luyện IELTS theo lộ trình rõ ràng với topic, từ vựng, từ điển, bài test ngắn và lịch sử lỗi sai.')">
     <meta property="og:url" content="{{ url()->current() }}">
     <title>@yield('title', 'IELTS Focus')</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     @stack('head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
