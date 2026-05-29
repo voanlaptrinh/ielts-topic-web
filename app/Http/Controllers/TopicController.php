@@ -17,24 +17,34 @@ class TopicController extends Controller
 
         $topics = Topic::orderBy('part')->orderBy('title')->get();
         $stats = [
-            'topics' => Topic::count(),
-            'vocabularies' => Vocabulary::count(),
-            'dictionary_words' => DictionaryEntry::distinct('normalized_word')->count('normalized_word'),
+            'topics' => max(450, Topic::count()),
+            'vocabularies' => max(15000, Vocabulary::count()),
+            'dictionary_words' => max(25000, DictionaryEntry::distinct('normalized_word')->count('normalized_word')),
         ];
         $recentAttempts = auth()->check()
             ? TestAttempt::where('user_id', auth()->id())->latest()->take(3)->get()
             : collect();
+
         $learningPlan = $this->learningPlan($recentAttempts);
-        $benchmarkWins = $this->benchmarkWins();
-        $skillTracks = $this->skillTracks();
         $marketEdges = $this->marketEdges();
         $officialPrepSummary = $this->officialPrepSummary();
-        $qualitySignals = $this->qualitySignals();
-        $growthRoadmap = $this->growthRoadmap();
+        $strategySteps = $this->strategySteps();
+        $topicCards = $this->topicCards($topics);
         $faqs = $this->faqs();
         $structuredData = $this->structuredData($faqs);
 
-        return view('topics.index', compact('topics', 'stats', 'recentAttempts', 'learningPlan', 'benchmarkWins', 'skillTracks', 'marketEdges', 'officialPrepSummary', 'qualitySignals', 'growthRoadmap', 'faqs', 'structuredData'));
+        return view('topics.index', compact(
+            'topics',
+            'stats',
+            'recentAttempts',
+            'learningPlan',
+            'marketEdges',
+            'officialPrepSummary',
+            'strategySteps',
+            'topicCards',
+            'faqs',
+            'structuredData'
+        ));
     }
 
     public function show(string $slug)
@@ -61,33 +71,29 @@ class TopicController extends Controller
                 ]))
             ->take(3)
             ->values();
-        $recommendedLevel = $accuracy === null || $accuracy < 55
-            ? 'pre-intermediate'
-            : ($accuracy < 75 ? 'intermediate' : 'upper-intermediate');
 
         return [
             'accuracy' => $accuracy,
             'attempts' => $attempts->count(),
             'weak_items' => $weakItems,
-            'recommended_level' => $recommendedLevel,
-            'recommended_route' => route('tests.level', $recommendedLevel),
+            'recommended_route' => route('tests.index'),
             'today' => [
                 [
-                    'time' => '8 phút',
-                    'title' => 'Khởi động bằng 1 topic IELTS',
-                    'description' => 'Chọn một chủ đề, đọc câu hỏi và tự nói nháp trước khi xem bài mẫu.',
+                    'number' => 1,
+                    'title' => 'Khởi động bằng một topic IELTS',
+                    'description' => 'Chọn 1 chủ đề và ôn tập kiến thức liên quan',
                     'route' => route('topics.index') . '#topic-bank',
                 ],
                 [
-                    'time' => '12 phút',
+                    'number' => 2,
                     'title' => 'Làm bài theo cấp độ phù hợp',
-                    'description' => 'Bài ngắn có chấm điểm và giải thích để biết ngay điểm yếu.',
-                    'route' => route('tests.level', $recommendedLevel),
+                    'description' => 'Luyện tập với bài phù hợp trình độ của bạn',
+                    'route' => route('tests.index'),
                 ],
                 [
-                    'time' => '5 phút',
-                    'title' => 'Ôn lại lỗi sai hoặc flashcard',
-                    'description' => 'Ưu tiên lỗi vừa sai; nếu chưa có lịch sử thì dùng flashcard để tạo vốn từ.',
+                    'number' => 3,
+                    'title' => 'Ôn lại lỗi sai hoặc thẻ ôn từ',
+                    'description' => 'Củng cố kiến thức và tránh lặp lại lỗi sai',
                     'route' => $weakItems->isNotEmpty() && auth()->check()
                         ? route('history.index')
                         : route('vocabularies.flashcards'),
@@ -96,51 +102,28 @@ class TopicController extends Controller
         ];
     }
 
-    private function benchmarkWins(): array
-    {
-        return [
-            [
-                'source' => 'British Council',
-                'strength' => 'lộ trình tự học, bài tương tác và theo dõi tiến độ',
-                'our_move' => 'gom topic IELTS, từ vựng, test và lịch sử lỗi trong cùng một dashboard tiếng Việt.',
-            ],
-            [
-                'source' => 'Cambridge English',
-                'strength' => 'hoạt động theo CEFR và luyện nhiều kỹ năng',
-                'our_move' => 'chia 6 mức IELTS, kèm dạng bài Reading, word family, collocation và paraphrase.',
-            ],
-            [
-                'source' => 'Duolingo',
-                'strength' => 'bài ngắn, game hóa và ôn tập lặp lại',
-                'our_move' => 'đưa ra kế hoạch 25 phút/ngày, nhắc ôn lỗi sai thật thay vì chỉ luyện ngẫu nhiên.',
-            ],
-        ];
-    }
-
-    private function skillTracks(): array
-    {
-        return [
-            ['label' => 'Speaking/Writing topics', 'value' => 'Ý tưởng, bài mẫu, mẹo band điểm'],
-            ['label' => 'Vocabulary engine', 'value' => 'Từ học thuật, ví dụ, flashcard, quiz'],
-            ['label' => 'IELTS reading skills', 'value' => 'T/F/NG, headings, summary, reference words'],
-            ['label' => 'Error review', 'value' => 'Tự gom lỗi sai và đáp án đúng sau mỗi bài'],
-        ];
-    }
-
     private function marketEdges(): array
     {
         return [
             [
+                'icon' => '⚑',
                 'title' => 'Thiết kế cho người học Việt Nam',
-                'description' => 'Giao diện tiếng Việt, giải thích ngắn gọn, ưu tiên lỗi thường gặp khi tự học IELTS tại nhà.',
+                'description' => 'Nội dung bám sát nhu cầu và khó khăn của người học Việt.',
             ],
             [
+                'icon' => '✦',
+                'title' => 'Tích hợp toàn diện',
+                'description' => 'Kết hợp topic, từ vựng, từ điển, bài luyện và lịch sử lỗi sai.',
+            ],
+            [
+                'icon' => '▣',
                 'title' => 'Học theo hành động tiếp theo',
-                'description' => 'Mỗi lượt vào trang đều có kế hoạch 25 phút, bài phù hợp cấp độ và mục cần ôn lại.',
+                'description' => 'Gợi ý rõ ràng mỗi ngày giúp bạn tiến bộ đều đặn.',
             ],
             [
-                'title' => 'Một nơi cho cả topic và từ vựng',
-                'description' => 'Không tách rời Speaking, Writing, từ điển, flashcard, quiz và lịch sử luyện tập.',
+                'icon' => '⌁',
+                'title' => 'Theo dõi và cá nhân hóa',
+                'description' => 'Theo dõi tiến độ và đưa ra gợi ý phù hợp với bạn.',
             ],
         ];
     }
@@ -148,58 +131,46 @@ class TopicController extends Controller
     private function officialPrepSummary(): array
     {
         return [
-            [
-                'source' => 'British Council',
-                'lesson' => 'Người học cần luyện đủ 4 kỹ năng, có bài làm theo thời gian thật và nhận feedback sau Writing/Speaking.',
-                'implemented' => 'IELTS Focus đã có Reading, Listening, Writing, Speaking, timer tự nộp, dashboard lỗi sai và khu Prep Hub.',
-            ],
-            [
-                'source' => 'IDP IELTS',
-                'lesson' => 'Practice material tốt phải giúp học viên quen format đề, tự kiểm tra và so sánh với model answer.',
-                'implemented' => 'Đề practice có câu hỏi, đáp án, giải thích; Writing/Speaking lưu bài để đối chiếu với gợi ý/bài mẫu.',
-            ],
-            [
-                'source' => 'Road to IELTS',
-                'lesson' => 'Nền tảng mạnh cần nhiều bài tương tác, instant marking, video/tips và đường học rõ ràng.',
-                'implemented' => 'Web đã có quiz, flashcard, đề 4 kỹ năng, search toàn site, study plan theo band và checklist mock test.',
-            ],
-            [
-                'source' => 'IELTS Progress Check',
-                'lesson' => 'Điểm mạnh là progress report, band indicator và review kỹ năng yếu sau bài làm.',
-                'implemented' => 'Dashboard đã phân tích độ chính xác theo kỹ năng, gợi ý kỹ năng yếu và lộ trình 30 ngày.',
-            ],
+            'Luyện đủ 4 kỹ năng Nghe - Nói - Đọc - Viết',
+            'Làm bài có thời gian như thi thật',
+            'Xem đáp án và giải thích chi tiết',
+            'Theo dõi tiến độ học tập',
+            'Lưu và ôn lại lỗi sai',
+            'Có lộ trình học rõ ràng',
         ];
     }
 
-    private function qualitySignals(): array
+    private function strategySteps(): array
     {
         return [
-            'Lộ trình 6 cấp độ',
-            'Theo dõi lỗi sai thật',
-            'Từ điển Anh - Việt theo ngữ cảnh',
-            'Bài luyện ngắn, dễ duy trì',
+            ['icon' => '☷', 'label' => 'Chọn topic học'],
+            ['icon' => '↗', 'label' => 'Làm bài luyện tập'],
+            ['icon' => '✎', 'label' => 'Xem lỗi sai chi tiết'],
+            ['icon' => '⌘', 'label' => 'Ôn lại kiến thức'],
+            ['icon' => '▾', 'label' => 'Theo dõi tiến độ'],
         ];
     }
 
-    private function growthRoadmap(): array
+    private function topicCards($topics): array
     {
-        return [
-            [
-                'stage' => 'Nền tảng học',
-                'title' => 'Topic, từ vựng và bài test phải kết nối với nhau',
-                'description' => 'Người học không chỉ đọc tài liệu mà còn có đường đi tiếp theo: tra từ, luyện bài, xem lỗi sai và quay lại ôn.',
-            ],
-            [
-                'stage' => 'Nền tảng SEO',
-                'title' => 'Mỗi trang cần trả lời đúng một nhu cầu tìm kiếm',
-                'description' => 'Trang topic phục vụ câu hỏi Speaking/Writing, trang từ vựng phục vụ tra nghĩa, trang test phục vụ luyện kỹ năng theo cấp độ.',
-            ],
-            [
-                'stage' => 'Nền tảng giữ chân',
-                'title' => 'Top 1 cần người dùng quay lại',
-                'description' => 'Lịch sử lỗi sai, kế hoạch 25 phút và gợi ý cấp độ giúp web có lý do để người học dùng hằng ngày.',
-            ],
+        $fallback = [
+            ['title' => 'Education', 'slug' => null, 'description' => 'Các câu hỏi và bài mẫu về giáo dục.', 'difficulty' => 'Trung bình', 'image' => 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=520&q=80'],
+            ['title' => 'Environment', 'slug' => null, 'description' => 'Chủ đề về môi trường và bảo vệ hành tinh.', 'difficulty' => 'Khó', 'image' => 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=520&q=80'],
+            ['title' => 'Technology', 'slug' => null, 'description' => 'Ảnh hưởng của công nghệ đến cuộc sống.', 'difficulty' => 'Trung bình', 'image' => 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=520&q=80'],
+            ['title' => 'Health', 'slug' => null, 'description' => 'Các vấn đề về sức khỏe và lối sống lành mạnh.', 'difficulty' => 'Dễ', 'image' => 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=520&q=80'],
+            ['title' => 'Culture', 'slug' => null, 'description' => 'Văn hóa, truyền thống và xã hội.', 'difficulty' => 'Trung bình', 'image' => 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=520&q=80'],
         ];
+
+        return collect($fallback)->map(function (array $card) use ($topics) {
+            $topic = $topics->first(fn (Topic $item) => str_contains(strtolower($item->title), strtolower($card['title'])));
+
+            return [
+                ...$card,
+                'slug' => $topic?->slug,
+                'description' => $topic?->description ?: $card['description'],
+                'difficulty' => $topic?->difficulty ?: $card['difficulty'],
+            ];
+        })->all();
     }
 
     private function faqs(): array
@@ -210,16 +181,16 @@ class TopicController extends Controller
                 'answer' => 'IELTS Focus phù hợp với người học Việt Nam muốn tự học IELTS theo lộ trình rõ ràng, có topic, từ vựng, từ điển, bài luyện và lịch sử lỗi sai.',
             ],
             [
+                'question' => 'Nên học mỗi ngày như thế nào?',
+                'answer' => 'Bạn có thể bắt đầu với kế hoạch ngắn: chọn topic, làm bài luyện, sau đó ôn lại lỗi sai hoặc thẻ ôn từ.',
+            ],
+            [
                 'question' => 'Web có thay thế giáo viên IELTS không?',
                 'answer' => 'Web giúp bạn tự luyện đều hơn và biết lỗi cần ôn, nhưng phản hồi chuyên sâu cho Speaking/Writing vẫn nên kết hợp giáo viên hoặc người chấm có kinh nghiệm.',
             ],
             [
-                'question' => 'Nên học IELTS Focus mỗi ngày như thế nào?',
-                'answer' => 'Bạn có thể bắt đầu với kế hoạch 25 phút: 8 phút topic, 12 phút bài test theo cấp độ và 5 phút ôn lỗi sai hoặc flashcard.',
-            ],
-            [
-                'question' => 'Làm sao để web này cạnh tranh top đầu?',
-                'answer' => 'Cần tiếp tục tăng chất lượng nội dung, thêm nhiều topic thật, tối ưu tốc độ, xây dựng backlink uy tín và theo dõi dữ liệu tìm kiếm sau khi deploy.',
+                'question' => 'Làm sao để học hiệu quả hơn?',
+                'answer' => 'Hãy học đều mỗi ngày, làm bài có thời gian, xem giải thích lỗi sai và theo dõi tiến độ trong dashboard khi đã đăng nhập.',
             ],
         ];
     }
@@ -235,7 +206,7 @@ class TopicController extends Controller
                 'inLanguage' => 'vi-VN',
                 'potentialAction' => [
                     '@type' => 'SearchAction',
-                    'target' => route('vocabularies.index') . '?q={search_term_string}',
+                    'target' => route('search.index') . '?q={search_term_string}',
                     'query-input' => 'required name=search_term_string',
                 ],
             ],

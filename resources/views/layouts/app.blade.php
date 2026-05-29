@@ -34,7 +34,10 @@
                     <a class="nav-link {{ request()->routeIs('vocabularies.flashcards') ? 'active' : '' }}" href="{{ route('vocabularies.flashcards') }}">Thẻ ôn từ</a>
                     <a class="nav-link {{ request()->routeIs('tests.*') ? 'active' : '' }}" href="{{ route('tests.index') }}">Luyện bài</a>
                     <a class="nav-link {{ request()->routeIs('prep.*') ? 'active' : '' }}" href="{{ route('prep.index') }}">Lộ trình</a>
-                    <a class="nav-link {{ request()->routeIs('search.*') ? 'active' : '' }}" href="{{ route('search.index') }}">Tìm kiếm</a>
+                    <form class="nav-search" method="GET" action="{{ route('search.index') }}">
+                        <input name="q" value="{{ request('q') }}" placeholder="Tìm kiếm...">
+                        <button type="submit" aria-label="Tìm kiếm">⌕</button>
+                    </form>
                     @auth
                         <div class="nav-item dropdown ms-lg-2">
                             <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -70,17 +73,41 @@
         <div class="container site-footer-grid">
             <div>
                 <a class="footer-brand" href="{{ route('topics.index') }}">IELTS Focus</a>
-                <p class="footer-copy">Nền tảng tự học IELTS bằng tiếng Việt, tập trung vào lộ trình, từ vựng, bài luyện ngắn và ôn lại lỗi sai thật.</p>
+                <p class="footer-copy">Nền tảng tự học IELTS toàn diện cho người Việt.</p>
+                <div class="footer-socials">
+                    <span>f</span>
+                    <span>▶</span>
+                    <span>♪</span>
+                </div>
             </div>
-            <nav class="footer-links" aria-label="Liên kết cuối trang">
-                <a href="{{ route('topics.index') }}">Chủ đề IELTS</a>
+            <div class="footer-column">
+                <strong>Khám phá</strong>
+                <a href="{{ route('topics.index') }}">Chủ đề</a>
                 <a href="{{ route('vocabularies.index') }}">Từ vựng</a>
                 <a href="{{ route('dictionary.index') }}">Từ điển</a>
+                <a href="{{ route('vocabularies.flashcards') }}">Thẻ ôn từ</a>
                 <a href="{{ route('tests.index') }}">Luyện bài</a>
+            </div>
+            <div class="footer-column">
+                <strong>Học tập</strong>
                 <a href="{{ route('prep.index') }}">Lộ trình</a>
-                <a href="{{ route('search.index') }}">Tìm kiếm</a>
-            </nav>
+                <a href="{{ route('tests.index') }}">Kế hoạch học</a>
+                <a href="{{ route('history.index') }}">Lỗi sai</a>
+                <a href="{{ route('dashboard') }}">Thống kê</a>
+            </div>
+            <div class="footer-column">
+                <strong>Hỗ trợ</strong>
+                <a href="{{ route('prep.index') }}">Câu hỏi thường gặp</a>
+                <a href="{{ route('dictionary.index') }}">Hướng dẫn sử dụng</a>
+                <a href="{{ route('search.index') }}">Liên hệ</a>
+            </div>
+            <div class="footer-column">
+                <strong>Chính sách</strong>
+                <a href="{{ route('topics.index') }}">Điều khoản sử dụng</a>
+                <a href="{{ route('topics.index') }}">Chính sách bảo mật</a>
+            </div>
         </div>
+        <div class="footer-bottom">© 2024 IELTS Focus. All rights reserved.</div>
     </footer>
 </div>
 </body>
