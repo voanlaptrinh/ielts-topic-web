@@ -2663,8 +2663,13 @@ a {
 
 @media (max-width: 575.98px) {
     .navbar .container {
+        width: 100%;
         padding-right: .85rem;
         padding-left: .85rem;
+    }
+
+    .container {
+        width: calc(100% - 1.5rem);
     }
 
     .main-content {
@@ -2673,16 +2678,25 @@ a {
 
     .home-hero {
         padding-top: 1rem;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .home-hero-copy {
+        min-width: 0;
     }
 
     .home-hero-copy h1 {
-        font-size: 2.05rem;
-        line-height: 1.12;
+        max-width: 100%;
+        font-size: clamp(1.55rem, 7.1vw, 1.9rem);
+        line-height: 1.14;
     }
 
     .home-hero-copy p {
+        max-width: 100%;
         margin-top: 1rem;
-        font-size: .98rem;
+        font-size: .94rem;
+        line-height: 1.65;
     }
 
     .home-hero-actions {
@@ -2691,21 +2705,28 @@ a {
     }
 
     .home-hero-visual {
+        width: 100%;
         min-height: 200px;
     }
 
     .home-hero-visual img {
+        width: 100%;
+        max-width: 100%;
         max-height: 250px;
+        margin-right: auto;
+        margin-left: auto;
+        object-fit: contain;
     }
 }
 
 @media (max-width: 420px) {
     .home-hero-copy h1 {
-        font-size: 1.9rem;
+        max-width: 14rem;
+        font-size: 1.5rem;
     }
 
     .home-hero-copy p {
-        font-size: .96rem;
+        font-size: .9rem;
     }
 
     .home-hero-actions {
@@ -2715,6 +2736,10 @@ a {
 
     .home-hero-visual {
         min-height: 190px;
+    }
+
+    .home-hero-visual img {
+        max-height: 225px;
     }
 
     .home-stat-grid,
