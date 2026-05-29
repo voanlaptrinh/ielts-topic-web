@@ -31,8 +31,17 @@ a {
     text-decoration: none;
 }
 
+::selection {
+    color: #fff;
+    background: rgba(37, 99, 235, .82);
+}
+
 .app-shell {
     min-height: 100vh;
+}
+
+.container {
+    max-width: 1180px;
 }
 
 .navbar {
