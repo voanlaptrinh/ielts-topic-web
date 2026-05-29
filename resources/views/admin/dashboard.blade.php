@@ -3,7 +3,7 @@
 @section('title', 'Admin - IELTS Focus')
 @section('meta_description', 'Khu vực quản trị IELTS Focus.')
 @section('admin_eyebrow', 'Tổng quan')
-@section('admin_title', 'Admin dashboard')
+@section('admin_title', 'Tổng quan quản trị')
 
 @section('admin_content')
     <section class="row g-3 mb-4">

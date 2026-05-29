@@ -15,16 +15,16 @@
             <span class="admin-brand-mark">IF</span>
             <div>
                 <strong>IELTS Focus</strong>
-                <small>Admin Control</small>
+                <small>Khu quản trị</small>
             </div>
         </div>
 
         <nav class="admin-sidebar-nav" aria-label="Admin navigation">
             <a class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
-                <span>Dashboard</span>
+                <span>Tổng quan</span>
             </a>
             <a class="{{ request()->routeIs('admin.topics.*') ? 'active' : '' }}" href="{{ route('admin.topics.index') }}">
-                <span>Topic IELTS</span>
+                <span>Chủ đề IELTS</span>
             </a>
             <a class="{{ request()->routeIs('admin.practice-tests.*') ? 'active' : '' }}" href="{{ route('admin.practice-tests.index') }}">
                 <span>Đề Reading/Listening</span>
@@ -47,8 +47,8 @@
     <section class="admin-workspace" data-admin-workspace>
         <header class="admin-topbar">
             <div>
-                <span class="eyebrow" data-admin-eyebrow>@yield('admin_eyebrow', 'Admin')</span>
-                <h1 data-admin-title>@yield('admin_title', 'Dashboard')</h1>
+                <span class="eyebrow" data-admin-eyebrow>@yield('admin_eyebrow', 'Quản trị')</span>
+                <h1 data-admin-title>@yield('admin_title', 'Tổng quan')</h1>
             </div>
             <div class="admin-topbar-user">
                 <span>{{ auth()->user()->name }}</span>

@@ -31,9 +31,9 @@
                     <a class="nav-link {{ request()->routeIs('topics.*') ? 'active' : '' }}" href="{{ route('topics.index') }}">Chủ đề</a>
                     <a class="nav-link {{ request()->routeIs('vocabularies.index', 'vocabularies.show') ? 'active' : '' }}" href="{{ route('vocabularies.index') }}">Từ vựng</a>
                     <a class="nav-link {{ request()->routeIs('dictionary.*') ? 'active' : '' }}" href="{{ route('dictionary.index') }}">Từ điển</a>
-                    <a class="nav-link {{ request()->routeIs('vocabularies.flashcards') ? 'active' : '' }}" href="{{ route('vocabularies.flashcards') }}">Flashcard</a>
+                    <a class="nav-link {{ request()->routeIs('vocabularies.flashcards') ? 'active' : '' }}" href="{{ route('vocabularies.flashcards') }}">Thẻ ôn từ</a>
                     <a class="nav-link {{ request()->routeIs('tests.*') ? 'active' : '' }}" href="{{ route('tests.index') }}">Luyện bài</a>
-                    <a class="nav-link {{ request()->routeIs('prep.*') ? 'active' : '' }}" href="{{ route('prep.index') }}">Prep Hub</a>
+                    <a class="nav-link {{ request()->routeIs('prep.*') ? 'active' : '' }}" href="{{ route('prep.index') }}">Lộ trình</a>
                     <a class="nav-link {{ request()->routeIs('search.*') ? 'active' : '' }}" href="{{ route('search.index') }}">Tìm kiếm</a>
                     @auth
                         <div class="nav-item dropdown ms-lg-2">
@@ -73,11 +73,11 @@
                 <p class="footer-copy">Nền tảng tự học IELTS bằng tiếng Việt, tập trung vào lộ trình, từ vựng, bài luyện ngắn và ôn lại lỗi sai thật.</p>
             </div>
             <nav class="footer-links" aria-label="Liên kết cuối trang">
-                <a href="{{ route('topics.index') }}">Topic IELTS</a>
+                <a href="{{ route('topics.index') }}">Chủ đề IELTS</a>
                 <a href="{{ route('vocabularies.index') }}">Từ vựng</a>
                 <a href="{{ route('dictionary.index') }}">Từ điển</a>
                 <a href="{{ route('tests.index') }}">Luyện bài</a>
-                <a href="{{ route('prep.index') }}">Prep Hub</a>
+                <a href="{{ route('prep.index') }}">Lộ trình</a>
                 <a href="{{ route('search.index') }}">Tìm kiếm</a>
             </nav>
         </div>
