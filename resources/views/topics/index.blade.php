@@ -146,6 +146,51 @@
         </article>
     </section>
 
+    <section class="home-card course-track-section">
+        <div class="home-section-heading">
+            <h2>Lộ trình học IELTS theo mục tiêu</h2>
+            <a href="{{ route('prep.index') }}">Xem lộ trình <x-ui-icon name="arrow-right" /></a>
+        </div>
+        <div class="course-track-grid">
+            @foreach ($courseTracks as $track)
+                <article class="course-track-card">
+                    <span><x-ui-icon :name="$track['icon']" /></span>
+                    <div>
+                        <small>{{ $track['level'] }}</small>
+                        <h3>{{ $track['title'] }}</h3>
+                        <p>{{ $track['description'] }}</p>
+                        <ul>
+                            @foreach ($track['focus'] as $focus)
+                                <li>{{ $focus }}</li>
+                            @endforeach
+                        </ul>
+                        <a class="btn btn-outline-primary btn-sm" href="{{ $track['route'] }}">Bắt đầu</a>
+                    </div>
+                </article>
+            @endforeach
+        </div>
+    </section>
+
+    <section class="home-card test-library-section">
+        <div class="home-section-heading">
+            <h2>Thư viện bài thi mô phỏng</h2>
+            <a href="{{ route('tests.index') }}">Vào phòng luyện <x-ui-icon name="arrow-right" /></a>
+        </div>
+        <div class="test-library-grid">
+            @foreach ($testLibrary as $test)
+                <a class="test-library-card" href="{{ $test['route'] }}">
+                    <strong>{{ $test['skill'] }}</strong>
+                    <p>{{ $test['description'] }}</p>
+                    <div>
+                        <span>{{ $test['time'] }}</span>
+                        <span>{{ $test['parts'] }}</span>
+                        <span>{{ $test['questions'] }}</span>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    </section>
+
     <section class="home-card topic-section" id="topic-bank">
         <div class="home-section-heading">
             <h2>Kho topic IELTS</h2>

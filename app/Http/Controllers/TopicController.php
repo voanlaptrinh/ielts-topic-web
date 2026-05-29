@@ -29,6 +29,8 @@ class TopicController extends Controller
         $marketEdges = $this->marketEdges();
         $officialPrepSummary = $this->officialPrepSummary();
         $strategySteps = $this->strategySteps();
+        $courseTracks = $this->courseTracks();
+        $testLibrary = $this->testLibrary();
         $topicCards = $this->topicCards($topics);
         $faqs = $this->faqs();
         $structuredData = $this->structuredData($faqs);
@@ -41,6 +43,8 @@ class TopicController extends Controller
             'marketEdges',
             'officialPrepSummary',
             'strategySteps',
+            'courseTracks',
+            'testLibrary',
             'topicCards',
             'faqs',
             'structuredData'
@@ -148,6 +152,74 @@ class TopicController extends Controller
             ['icon' => 'edit', 'label' => 'Xem lỗi sai chi tiết'],
             ['icon' => 'refresh', 'label' => 'Ôn lại kiến thức'],
             ['icon' => 'chart', 'label' => 'Theo dõi tiến độ'],
+        ];
+    }
+
+    private function courseTracks(): array
+    {
+        return [
+            [
+                'icon' => 'book',
+                'title' => 'IELTS nền tảng',
+                'level' => 'Band 0 - 4.5',
+                'description' => 'Củng cố ngữ pháp, từ vựng học thuật và thói quen làm bài có thời gian.',
+                'focus' => ['Từ vựng cốt lõi', 'Ngữ pháp nền', 'Bài tập ngắn'],
+                'route' => route('tests.level', 'foundation'),
+            ],
+            [
+                'icon' => 'tasks',
+                'title' => 'Listening & Reading Lab',
+                'level' => 'Band 4.5 - 6.5',
+                'description' => 'Luyện kỹ năng bắt ý, quét thông tin, quản lý thời gian và kiểm tra đáp án.',
+                'focus' => ['Listening 4 phần', 'Reading 3 bài đọc', 'Giải thích lỗi sai'],
+                'route' => route('tests.index'),
+            ],
+            [
+                'icon' => 'edit',
+                'title' => 'Writing & Speaking Coach',
+                'level' => 'Band 5.0 - 7.0+',
+                'description' => 'Thực hành trả lời theo tiêu chí IELTS, lưu bài làm và xem phản hồi sau khi chấm.',
+                'focus' => ['Task response', 'Fluency', 'Lexical resource'],
+                'route' => route('tests.writing'),
+            ],
+        ];
+    }
+
+    private function testLibrary(): array
+    {
+        return [
+            [
+                'skill' => 'Listening',
+                'time' => '40 phút',
+                'parts' => '4 phần',
+                'questions' => '40 câu',
+                'description' => 'Bài nghe mô phỏng theo kỹ năng nghe hiểu, ghi chú nhanh và chọn đáp án.',
+                'route' => route('tests.listening'),
+            ],
+            [
+                'skill' => 'Reading',
+                'time' => '60 phút',
+                'parts' => '3 bài đọc',
+                'questions' => '40 câu',
+                'description' => 'Bài đọc học thuật với mục tiêu tìm ý chính, chi tiết và suy luận.',
+                'route' => route('tests.reading'),
+            ],
+            [
+                'skill' => 'Writing',
+                'time' => '60 phút',
+                'parts' => '2 task',
+                'questions' => 'Chấm sau',
+                'description' => 'Không gian viết bài, lưu lịch sử và nhận phản hồi theo tiêu chí IELTS.',
+                'route' => route('tests.writing'),
+            ],
+            [
+                'skill' => 'Speaking',
+                'time' => '11 - 14 phút',
+                'parts' => '3 phần',
+                'questions' => 'Gợi ý trả lời',
+                'description' => 'Luyện nói theo cue card, ghi lại ý tưởng và theo dõi chủ đề đã luyện.',
+                'route' => route('tests.speaking'),
+            ],
         ];
     }
 
