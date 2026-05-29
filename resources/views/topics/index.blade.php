@@ -98,6 +98,25 @@
         @endforeach
     </section>
 
+    <section class="soft-panel mb-4">
+        <div class="section-heading-row">
+            <div>
+                <span class="eyebrow">Tổng hợp từ website IELTS uy tín</span>
+                <h2 class="h3 mb-0">Những gì British Council, IDP và các nền tảng lớn có, web này đã gom thành lộ trình học.</h2>
+            </div>
+            <a class="btn btn-outline-primary" href="{{ route('prep.index') }}">Mở Prep Hub</a>
+        </div>
+        <div class="benchmark-grid mt-3">
+            @foreach ($officialPrepSummary as $item)
+                <article class="benchmark-item">
+                    <span class="benchmark-source">{{ $item['source'] }}</span>
+                    <p class="mb-1"><strong>Điểm cần có:</strong> {{ $item['lesson'] }}</p>
+                    <p class="mb-0"><strong>Đã đưa vào web:</strong> {{ $item['implemented'] }}</p>
+                </article>
+            @endforeach
+        </div>
+    </section>
+
     <section class="learning-command mb-4">
         <div class="learning-command-main">
             <span class="eyebrow">Chiến lược cạnh tranh</span>

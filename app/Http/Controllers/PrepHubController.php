@@ -10,6 +10,7 @@ class PrepHubController extends Controller
             'skills' => $this->skills(),
             'plans' => $this->studyPlans(),
             'criteria' => $this->bandCriteria(),
+            'officialBenchmarks' => $this->officialBenchmarks(),
             'mistakes' => $this->commonMistakes(),
             'mockChecklist' => $this->mockChecklist(),
         ]);
@@ -60,6 +61,32 @@ class PrepHubController extends Controller
             'Writing' => ['Task response/achievement', 'Coherence and cohesion', 'Lexical resource', 'Grammar range and accuracy'],
             'Speaking' => ['Fluency and coherence', 'Lexical resource', 'Grammar range and accuracy', 'Pronunciation'],
             'Reading/Listening' => ['Độ chính xác đáp án', 'Khả năng theo format đề', 'Quản lý thời gian', 'Review lỗi sai sau bài làm'],
+        ];
+    }
+
+    private function officialBenchmarks(): array
+    {
+        return [
+            [
+                'name' => 'Official practice materials',
+                'purpose' => 'Làm quen format đề, loại câu hỏi và áp lực thời gian trước ngày thi.',
+                'use_in_site' => 'Vào Luyện bài để làm Reading, Listening, Writing, Speaking theo timer.',
+            ],
+            [
+                'name' => 'Model answers and answer keys',
+                'purpose' => 'Sau khi làm bài cần xem đáp án, giải thích và mẫu trả lời để biết cách nâng band.',
+                'use_in_site' => 'Xem kết quả sau bài làm, review giải thích và lưu lỗi sai vào dashboard.',
+            ],
+            [
+                'name' => 'Writing/Speaking feedback',
+                'purpose' => 'Hai kỹ năng productive cần feedback theo tiêu chí band, không chỉ làm bài một lần.',
+                'use_in_site' => 'Nộp bài Writing/Speaking để lưu lịch sử; admin hoặc AI có thể bổ sung feedback chi tiết ở bước sau.',
+            ],
+            [
+                'name' => 'Progress report',
+                'purpose' => 'Người học cần biết kỹ năng nào yếu và tuần tới nên học gì.',
+                'use_in_site' => 'Dashboard phân tích accuracy theo kỹ năng và sinh lộ trình 30 ngày.',
+            ],
         ];
     }
 

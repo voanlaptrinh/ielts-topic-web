@@ -28,12 +28,13 @@ class TopicController extends Controller
         $benchmarkWins = $this->benchmarkWins();
         $skillTracks = $this->skillTracks();
         $marketEdges = $this->marketEdges();
+        $officialPrepSummary = $this->officialPrepSummary();
         $qualitySignals = $this->qualitySignals();
         $growthRoadmap = $this->growthRoadmap();
         $faqs = $this->faqs();
         $structuredData = $this->structuredData($faqs);
 
-        return view('topics.index', compact('topics', 'stats', 'recentAttempts', 'learningPlan', 'benchmarkWins', 'skillTracks', 'marketEdges', 'qualitySignals', 'growthRoadmap', 'faqs', 'structuredData'));
+        return view('topics.index', compact('topics', 'stats', 'recentAttempts', 'learningPlan', 'benchmarkWins', 'skillTracks', 'marketEdges', 'officialPrepSummary', 'qualitySignals', 'growthRoadmap', 'faqs', 'structuredData'));
     }
 
     public function show(string $slug)
@@ -140,6 +141,32 @@ class TopicController extends Controller
             [
                 'title' => 'Một nơi cho cả topic và từ vựng',
                 'description' => 'Không tách rời Speaking, Writing, từ điển, flashcard, quiz và lịch sử luyện tập.',
+            ],
+        ];
+    }
+
+    private function officialPrepSummary(): array
+    {
+        return [
+            [
+                'source' => 'British Council',
+                'lesson' => 'Người học cần luyện đủ 4 kỹ năng, có bài làm theo thời gian thật và nhận feedback sau Writing/Speaking.',
+                'implemented' => 'IELTS Focus đã có Reading, Listening, Writing, Speaking, timer tự nộp, dashboard lỗi sai và khu Prep Hub.',
+            ],
+            [
+                'source' => 'IDP IELTS',
+                'lesson' => 'Practice material tốt phải giúp học viên quen format đề, tự kiểm tra và so sánh với model answer.',
+                'implemented' => 'Đề practice có câu hỏi, đáp án, giải thích; Writing/Speaking lưu bài để đối chiếu với gợi ý/bài mẫu.',
+            ],
+            [
+                'source' => 'Road to IELTS',
+                'lesson' => 'Nền tảng mạnh cần nhiều bài tương tác, instant marking, video/tips và đường học rõ ràng.',
+                'implemented' => 'Web đã có quiz, flashcard, đề 4 kỹ năng, search toàn site, study plan theo band và checklist mock test.',
+            ],
+            [
+                'source' => 'IELTS Progress Check',
+                'lesson' => 'Điểm mạnh là progress report, band indicator và review kỹ năng yếu sau bài làm.',
+                'implemented' => 'Dashboard đã phân tích độ chính xác theo kỹ năng, gợi ý kỹ năng yếu và lộ trình 30 ngày.',
             ],
         ];
     }

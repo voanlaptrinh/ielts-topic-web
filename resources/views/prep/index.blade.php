@@ -28,6 +28,24 @@
         @endforeach
     </section>
 
+    <section class="soft-panel mb-4">
+        <div class="section-heading-row">
+            <div>
+                <span class="eyebrow">Tổng hợp chuẩn luyện IELTS</span>
+                <h2 class="section-title mb-0">Những module nên có trên một web học IELTS nghiêm túc.</h2>
+            </div>
+        </div>
+        <div class="benchmark-grid mt-3">
+            @foreach ($officialBenchmarks as $benchmark)
+                <article class="benchmark-item">
+                    <span class="benchmark-source">{{ $benchmark['name'] }}</span>
+                    <p class="mb-1"><strong>Mục đích:</strong> {{ $benchmark['purpose'] }}</p>
+                    <p class="mb-0"><strong>Dùng trên web:</strong> {{ $benchmark['use_in_site'] }}</p>
+                </article>
+            @endforeach
+        </div>
+    </section>
+
     <div class="row g-4">
         <section class="col-lg-6">
             <div class="card h-100">
