@@ -61,7 +61,10 @@ a {
 }
 
 .container {
-    max-width: 1180px;
+    width: min(100% - clamp(1.5rem, 4vw, 3rem), 1680px);
+    max-width: none;
+    padding-right: 0;
+    padding-left: 0;
 }
 
 .navbar {
