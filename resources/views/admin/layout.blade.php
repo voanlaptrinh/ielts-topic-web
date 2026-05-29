@@ -32,6 +32,9 @@
             <a class="{{ request()->routeIs('admin.vocabularies.*') ? 'active' : '' }}" href="{{ route('admin.vocabularies.index') }}">
                 <span>Từ vựng</span>
             </a>
+            <a class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                <span>User</span>
+            </a>
             <a href="{{ route('topics.index') }}">
                 <span>Xem website</span>
             </a>

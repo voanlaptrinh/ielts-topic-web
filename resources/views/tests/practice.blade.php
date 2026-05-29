@@ -50,7 +50,9 @@
 
                         <input type="hidden" name="answers[{{ $question->id }}]" value="Chưa chọn">
 
-                        @if ($question->question_type === 'short_answer' || empty($question->options))
+                        @if (in_array($practiceTest->skill, ['writing', 'speaking'], true))
+                            <textarea class="form-control mt-3" name="answers[{{ $question->id }}]" rows="{{ $practiceTest->skill === 'writing' ? 10 : 5 }}" placeholder="{{ $practiceTest->skill === 'writing' ? 'Viết bài của bạn ở đây' : 'Ghi câu trả lời nháp hoặc transcript luyện nói' }}"></textarea>
+                        @elseif ($question->question_type === 'short_answer' || empty($question->options))
                             <input class="form-control mt-3" name="answers[{{ $question->id }}]" placeholder="Nhập đáp án">
                         @else
                             <div class="vstack gap-2 mt-3">

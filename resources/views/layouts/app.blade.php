@@ -33,6 +33,7 @@
                     <a class="nav-link {{ request()->routeIs('dictionary.*') ? 'active' : '' }}" href="{{ route('dictionary.index') }}">Từ điển</a>
                     <a class="nav-link {{ request()->routeIs('vocabularies.flashcards') ? 'active' : '' }}" href="{{ route('vocabularies.flashcards') }}">Flashcard</a>
                     <a class="nav-link {{ request()->routeIs('tests.*') ? 'active' : '' }}" href="{{ route('tests.index') }}">Luyện bài</a>
+                    <a class="nav-link {{ request()->routeIs('search.*') ? 'active' : '' }}" href="{{ route('search.index') }}">Tìm kiếm</a>
                     @auth
                         <a class="nav-link {{ request()->routeIs('dashboard', 'history.*') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
                         @if (auth()->user()->isAdmin())
@@ -66,6 +67,7 @@
                 <a href="{{ route('vocabularies.index') }}">Từ vựng</a>
                 <a href="{{ route('dictionary.index') }}">Từ điển</a>
                 <a href="{{ route('tests.index') }}">Luyện bài</a>
+                <a href="{{ route('search.index') }}">Tìm kiếm</a>
             </nav>
         </div>
     </footer>

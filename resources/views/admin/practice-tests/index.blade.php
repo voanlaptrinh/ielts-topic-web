@@ -10,6 +10,8 @@
             <a class="btn btn-sm {{ ! $skill ? 'btn-primary' : 'btn-outline-primary' }}" href="{{ route('admin.practice-tests.index') }}">Tất cả</a>
             <a class="btn btn-sm {{ $skill === 'reading' ? 'btn-primary' : 'btn-outline-primary' }}" href="{{ route('admin.practice-tests.index', ['skill' => 'reading']) }}">Reading</a>
             <a class="btn btn-sm {{ $skill === 'listening' ? 'btn-primary' : 'btn-outline-primary' }}" href="{{ route('admin.practice-tests.index', ['skill' => 'listening']) }}">Listening</a>
+            <a class="btn btn-sm {{ $skill === 'writing' ? 'btn-primary' : 'btn-outline-primary' }}" href="{{ route('admin.practice-tests.index', ['skill' => 'writing']) }}">Writing</a>
+            <a class="btn btn-sm {{ $skill === 'speaking' ? 'btn-primary' : 'btn-outline-primary' }}" href="{{ route('admin.practice-tests.index', ['skill' => 'speaking']) }}">Speaking</a>
         </div>
         <a class="btn btn-primary" href="{{ route('admin.practice-tests.create') }}">Tạo đề mới</a>
     </div>

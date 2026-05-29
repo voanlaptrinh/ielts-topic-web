@@ -74,5 +74,59 @@ class PracticeTestSeeder extends Seeder
                 'explanation' => 'The speaker asks for a projector.',
             ],
         ]);
+
+        $writing = PracticeTest::updateOrCreate(
+            ['slug' => 'education-technology-writing-task-2'],
+            [
+                'title' => 'Education and Technology - Writing Task 2',
+                'skill' => 'writing',
+                'level' => 'upper-intermediate',
+                'duration_minutes' => 40,
+                'description' => 'Luyện essay agree/disagree về công nghệ trong giáo dục.',
+                'is_published' => true,
+            ],
+        );
+
+        $writing->questions()->delete();
+        $writing->questions()->create([
+            'position' => 1,
+            'question_type' => 'short_answer',
+            'prompt' => 'Some people believe that technology has made classroom teachers less important. To what extent do you agree or disagree?',
+            'options' => [],
+            'correct_answer' => 'Write at least 250 words with a clear position, two body paragraphs and examples.',
+            'explanation' => 'Bài tốt cần nêu rõ lập trường, giải thích vai trò của giáo viên, tác động của công nghệ và ví dụ cụ thể.',
+        ]);
+
+        $speaking = PracticeTest::updateOrCreate(
+            ['slug' => 'daily-routine-speaking-part-1'],
+            [
+                'title' => 'Daily Routine - Speaking Part 1',
+                'skill' => 'speaking',
+                'level' => 'intermediate',
+                'duration_minutes' => 10,
+                'description' => 'Luyện trả lời ngắn, tự nhiên và có mở rộng ý.',
+                'is_published' => true,
+            ],
+        );
+
+        $speaking->questions()->delete();
+        $speaking->questions()->createMany([
+            [
+                'position' => 1,
+                'question_type' => 'short_answer',
+                'prompt' => 'What do you usually do in the morning?',
+                'options' => [],
+                'correct_answer' => 'Give a direct answer, then add one detail and one reason.',
+                'explanation' => 'Câu trả lời nên tự nhiên, không học thuộc quá dài, có thêm lý do hoặc ví dụ.',
+            ],
+            [
+                'position' => 2,
+                'question_type' => 'short_answer',
+                'prompt' => 'Has your daily routine changed recently?',
+                'options' => [],
+                'correct_answer' => 'Use past/present contrast and explain why it changed.',
+                'explanation' => 'Nên dùng thì hiện tại hoàn thành hoặc quá khứ đơn khi so sánh thay đổi.',
+            ],
+        ]);
     }
 }

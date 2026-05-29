@@ -43,6 +43,30 @@ class PracticeTestController extends Controller
         ]);
     }
 
+    public function writing()
+    {
+        return view('tests.writing', [
+            'tests' => $this->publishedPracticeTests('writing'),
+            'tasks' => [
+                ['type' => 'Task 1', 'focus' => 'Mô tả biểu đồ, quy trình, bản đồ hoặc thư theo bố cục rõ ràng.'],
+                ['type' => 'Task 2', 'focus' => 'Viết essay có luận điểm, ví dụ, cohesion và lexical resource.'],
+                ['type' => 'Band sample', 'focus' => 'So sánh bài mẫu band 6.5, 7.0, 8.0 để nâng chất lượng bài viết.'],
+            ],
+        ]);
+    }
+
+    public function speaking()
+    {
+        return view('tests.speaking', [
+            'tests' => $this->publishedPracticeTests('speaking'),
+            'tasks' => [
+                ['type' => 'Part 1', 'focus' => 'Trả lời tự nhiên về bản thân, thói quen, học tập và công việc.'],
+                ['type' => 'Part 2', 'focus' => 'Luyện cue card 1-2 phút với idea bank và cấu trúc mở rộng.'],
+                ['type' => 'Part 3', 'focus' => 'Phát triển câu trả lời trừu tượng, so sánh và đưa ví dụ.'],
+            ],
+        ]);
+    }
+
     public function showPracticeTest(string $skill, PracticeTest $practiceTest)
     {
         abort_if($practiceTest->skill !== $skill || ! $practiceTest->is_published, 404);
@@ -63,18 +87,20 @@ class PracticeTestController extends Controller
 
         foreach ($questions as $question) {
             $answer = $answers[$question->id] ?? 'Chưa chọn';
-            $isCorrect = $this->normalizeAnswer($answer) === $this->normalizeAnswer($question->correct_answer);
+            $isCorrect = in_array($practiceTest->skill, ['writing', 'speaking'], true)
+                ? trim($answer) !== '' && $answer !== 'Chưa chọn'
+                : $this->normalizeAnswer($answer) === $this->normalizeAnswer($question->correct_answer);
             $score += $isCorrect ? 1 : 0;
             $results[] = [
                 'word' => $question->prompt,
                 'answer' => $answer,
-                'correct' => $question->correct_answer,
+                'correct' => in_array($practiceTest->skill, ['writing', 'speaking'], true) ? 'Bài đã nộp, hãy đối chiếu với gợi ý/bài mẫu.' : $question->correct_answer,
                 'is_correct' => $isCorrect,
                 'explanation' => ($isCorrect ? 'Đúng. ' : 'Sai. ') . ($question->explanation ?: 'Đáp án đúng là: ' . $question->correct_answer),
             ];
         }
 
-        $this->recordAttempt($practiceTest->skill === 'reading' ? 'IELTS Reading' : 'IELTS Listening', $practiceTest->level, $score, count($results), $results);
+        $this->recordAttempt('IELTS ' . ucfirst($practiceTest->skill), $practiceTest->level, $score, count($results), $results);
 
         return view('tests.result', [
             'title' => 'Kết quả - ' . $practiceTest->title,

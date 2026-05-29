@@ -136,7 +136,7 @@ class AdminController extends Controller
 
         return view('admin.practice-tests.index', [
             'tests' => PracticeTest::query()
-                ->when(in_array($skill, ['reading', 'listening'], true), fn ($query) => $query->where('skill', $skill))
+                ->when(in_array($skill, ['reading', 'listening', 'writing', 'speaking'], true), fn ($query) => $query->where('skill', $skill))
                 ->withCount('questions')
                 ->latest()
                 ->paginate(20)
@@ -270,7 +270,7 @@ class AdminController extends Controller
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('practice_tests', 'slug')->ignore($practiceTest)],
-            'skill' => ['required', Rule::in(['reading', 'listening'])],
+            'skill' => ['required', Rule::in(['reading', 'listening', 'writing', 'speaking'])],
             'level' => ['required', 'string', 'max:50'],
             'duration_minutes' => ['required', 'integer', 'min:1', 'max:180'],
             'description' => ['nullable', 'string'],
@@ -338,6 +338,33 @@ class AdminController extends Controller
         }
 
         return $request->file('audio_file')->store('practice-audio', 'public');
+    }
+
+    public function users(Request $request)
+    {
+        $search = trim((string) $request->query('q'));
+
+        return view('admin.users.index', [
+            'users' => User::query()
+                ->withCount('testAttempts')
+                ->when($search, fn ($query) => $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                }))
+                ->latest()
+                ->paginate(25)
+                ->withQueryString(),
+            'search' => $search,
+        ]);
+    }
+
+    public function toggleAdmin(User $user)
+    {
+        abort_if($user->is(auth()->user()), 422, 'Không thể tự đổi quyền của chính mình.');
+
+        $user->update(['is_admin' => ! $user->is_admin]);
+
+        return back()->with('status', 'Đã cập nhật quyền user.');
     }
 
     private function lines(string $value): array

@@ -27,6 +27,22 @@
                 <a class="btn btn-primary align-self-start" href="{{ route('tests.listening') }}">Vào Listening</a>
             </div>
         </article>
+        <article class="card study-card">
+            <div class="card-body d-flex flex-column">
+                <span class="badge text-bg-success align-self-start">Writing</span>
+                <h2 class="h5 mt-3">Luyện Writing Task 1/2</h2>
+                <p class="text-muted flex-grow-1">Viết bài theo đề, lưu lịch sử và đối chiếu với gợi ý/bài mẫu để nâng band.</p>
+                <a class="btn btn-primary align-self-start" href="{{ route('tests.writing') }}">Vào Writing</a>
+            </div>
+        </article>
+        <article class="card study-card">
+            <div class="card-body d-flex flex-column">
+                <span class="badge text-bg-success align-self-start">Speaking</span>
+                <h2 class="h5 mt-3">Luyện Speaking Part 1/2/3</h2>
+                <p class="text-muted flex-grow-1">Luyện idea, cue card và câu trả lời theo topic để nói tự nhiên hơn.</p>
+                <a class="btn btn-primary align-self-start" href="{{ route('tests.speaking') }}">Vào Speaking</a>
+            </div>
+        </article>
 
         @foreach ($levels as $key => $level)
             <article class="card study-card">

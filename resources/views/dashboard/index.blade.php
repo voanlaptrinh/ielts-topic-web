@@ -69,6 +69,36 @@
         </section>
 
         <section class="col-lg-5">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="section-title">Phân tích kỹ năng</h2>
+                    <p class="text-muted mb-0">Kỹ năng cần ưu tiên: {{ $weakestSkill }}.</p>
+                    @forelse ($skillBreakdown as $skill)
+                        <div class="skill-row mt-3">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ $skill['skill'] }}</strong>
+                                <span>{{ $skill['accuracy'] }}%</span>
+                            </div>
+                            <div class="progress mt-2" role="progressbar" aria-valuenow="{{ $skill['accuracy'] }}" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: {{ $skill['accuracy'] }}%"></div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="empty-state mt-3">Làm bài 4 kỹ năng để dashboard phân tích điểm yếu.</div>
+                    @endforelse
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="section-title">Lộ trình 30 ngày</h2>
+                    @foreach ($roadmap as $item)
+                        <article class="review-item mt-3">
+                            <span class="badge text-bg-primary">{{ $item['label'] }}</span>
+                            <strong>{{ $item['task'] }}</strong>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
             <div class="card">
                 <div class="card-body">
                     <h2 class="section-title">Từ đã tra gần đây</h2>

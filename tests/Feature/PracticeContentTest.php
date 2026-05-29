@@ -82,4 +82,57 @@ class PracticeContentTest extends TestCase
             'total' => 1,
         ]);
     }
+
+    public function test_writing_and_speaking_pages_are_available(): void
+    {
+        PracticeTest::create([
+            'title' => 'Writing Task 2',
+            'slug' => 'writing-task-2',
+            'skill' => 'writing',
+            'level' => 'intermediate',
+            'duration_minutes' => 40,
+            'description' => 'Essay practice.',
+            'is_published' => true,
+        ])->questions()->create([
+            'position' => 1,
+            'question_type' => 'short_answer',
+            'prompt' => 'Write an essay.',
+            'correct_answer' => 'Sample guidance',
+        ]);
+
+        PracticeTest::create([
+            'title' => 'Speaking Part 2',
+            'slug' => 'speaking-part-2',
+            'skill' => 'speaking',
+            'level' => 'intermediate',
+            'duration_minutes' => 10,
+            'description' => 'Cue card practice.',
+            'is_published' => true,
+        ])->questions()->create([
+            'position' => 1,
+            'question_type' => 'short_answer',
+            'prompt' => 'Describe a place.',
+            'correct_answer' => 'Sample guidance',
+        ]);
+
+        $this->get('/tests/writing')->assertOk()->assertSee('Writing Task 2');
+        $this->get('/tests/speaking')->assertOk()->assertSee('Speaking Part 2');
+    }
+
+    public function test_search_finds_practice_tests(): void
+    {
+        PracticeTest::create([
+            'title' => 'Environment Writing',
+            'slug' => 'environment-writing',
+            'skill' => 'writing',
+            'level' => 'intermediate',
+            'duration_minutes' => 40,
+            'description' => 'Environment essay.',
+            'is_published' => true,
+        ]);
+
+        $this->get('/search?q=Environment')
+            ->assertOk()
+            ->assertSee('Environment Writing');
+    }
 }

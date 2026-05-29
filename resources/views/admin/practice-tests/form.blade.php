@@ -41,6 +41,8 @@
                         <select class="form-select" name="skill" required>
                             <option value="reading" @selected(old('skill', $practiceTest->skill) === 'reading')>Reading</option>
                             <option value="listening" @selected(old('skill', $practiceTest->skill) === 'listening')>Listening</option>
+                            <option value="writing" @selected(old('skill', $practiceTest->skill) === 'writing')>Writing</option>
+                            <option value="speaking" @selected(old('skill', $practiceTest->skill) === 'speaking')>Speaking</option>
                         </select>
                     </div>
                     <div class="col-md-4">
