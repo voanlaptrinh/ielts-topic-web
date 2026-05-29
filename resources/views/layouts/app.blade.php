@@ -38,10 +38,6 @@
                     <a class="nav-link {{ request()->routeIs('vocabularies.flashcards') ? 'active' : '' }}" href="{{ route('vocabularies.flashcards') }}">Thẻ ôn từ</a>
                     <a class="nav-link {{ request()->routeIs('tests.*') ? 'active' : '' }}" href="{{ route('tests.index') }}">Luyện bài</a>
                     <a class="nav-link {{ request()->routeIs('prep.*') ? 'active' : '' }}" href="{{ route('prep.index') }}">Lộ trình</a>
-                    <form class="nav-search" method="GET" action="{{ route('search.index') }}">
-                        <input name="q" value="{{ request('q') }}" placeholder="Tìm kiếm...">
-                        <button type="submit" aria-label="Tìm kiếm"><x-ui-icon name="search" /></button>
-                    </form>
                     @auth
                         <div class="nav-item dropdown ms-lg-2">
                             <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
