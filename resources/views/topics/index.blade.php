@@ -107,16 +107,23 @@
 
     <section class="home-progress-grid">
         <article class="home-card strategy-card">
-            <h2>Chiến lược học tập tại IELTS Focus</h2>
-            <div class="strategy-flow">
+            <div class="strategy-intro">
+                <span class="eyebrow">Lộ trình hành động</span>
+                <h2>Chiến lược học tập tại IELTS Focus</h2>
+                <p>Học theo một vòng lặp rõ ràng: chọn chủ đề, luyện có thời gian, xem lỗi sai và quay lại ôn tập đúng điểm yếu.</p>
+                <a class="btn btn-primary btn-sm" href="{{ route('tests.index') }}">Bắt đầu học ngay</a>
+            </div>
+            <div class="strategy-flow" aria-label="Quy trình học tại IELTS Focus">
                 @foreach ($strategySteps as $step)
                     <div class="strategy-step">
                         <span><x-ui-icon :name="$step['icon']" /></span>
-                        <small>{{ $step['label'] }}</small>
+                        <div>
+                            <strong>{{ $step['label'] }}</strong>
+                            <small>{{ $step['description'] }}</small>
+                        </div>
                     </div>
                 @endforeach
             </div>
-            <a class="btn btn-primary btn-sm" href="{{ route('tests.index') }}">Bắt đầu học ngay</a>
         </article>
 
         <article class="home-card review-card">

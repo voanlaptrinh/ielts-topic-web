@@ -147,11 +147,31 @@ class TopicController extends Controller
     private function strategySteps(): array
     {
         return [
-            ['icon' => 'list', 'label' => 'Chọn topic học'],
-            ['icon' => 'tasks', 'label' => 'Làm bài luyện tập'],
-            ['icon' => 'edit', 'label' => 'Xem lỗi sai chi tiết'],
-            ['icon' => 'refresh', 'label' => 'Ôn lại kiến thức'],
-            ['icon' => 'chart', 'label' => 'Theo dõi tiến độ'],
+            [
+                'icon' => 'list',
+                'label' => 'Chọn topic học',
+                'description' => 'Bắt đầu từ chủ đề đúng nhu cầu và trình độ.',
+            ],
+            [
+                'icon' => 'tasks',
+                'label' => 'Làm bài luyện tập',
+                'description' => 'Luyện theo thời gian và đúng dạng bài IELTS.',
+            ],
+            [
+                'icon' => 'edit',
+                'label' => 'Xem lỗi sai chi tiết',
+                'description' => 'Biết đúng cần sửa gì sau mỗi lần làm bài.',
+            ],
+            [
+                'icon' => 'refresh',
+                'label' => 'Ôn lại kiến thức',
+                'description' => 'Quay lại từ vựng, ngữ pháp và lỗi sai quan trọng.',
+            ],
+            [
+                'icon' => 'chart',
+                'label' => 'Theo dõi tiến độ',
+                'description' => 'Xem điểm, độ chính xác và bước học tiếp theo.',
+            ],
         ];
     }
 
