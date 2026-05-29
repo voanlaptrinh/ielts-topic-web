@@ -36,7 +36,6 @@
                     <a class="nav-link {{ request()->routeIs('prep.*') ? 'active' : '' }}" href="{{ route('prep.index') }}">Prep Hub</a>
                     <a class="nav-link {{ request()->routeIs('search.*') ? 'active' : '' }}" href="{{ route('search.index') }}">Tìm kiếm</a>
                     @auth
-                        <a class="nav-link {{ request()->routeIs('dashboard', 'history.*') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
                         @if (auth()->user()->isAdmin())
                             <a class="nav-link {{ request()->routeIs('admin.*') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Admin</a>
                         @endif
