@@ -1,0 +1,16 @@
+:root {
+    --surface: #ffffff;
+    --surface-soft: #f5f8ff;
+    --ink: #0f172a;
+    --muted: #5b6475;
+    --line: #d8e5f7;
+    --primary: #225de8;
+    --primary-dark: #184ac4;
+    --teal: #0f766e;
+    --amber: #a16207;
+    --rose: #be123c;
+    --sky: #0284c7;
+    --footer-bg: #ffffff;
+    --shadow-sm: 0 14px 34px rgba(29, 78, 216, .065);
+    --shadow-md: 0 30px 76px rgba(29, 78, 216, .11);
+}

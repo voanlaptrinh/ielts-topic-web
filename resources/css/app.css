@@ -1,20 +1,5 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
-
-:root {
-    --surface: #ffffff;
-    --surface-soft: #f5f8ff;
-    --ink: #0f172a;
-    --muted: #5b6475;
-    --line: #d8e5f7;
-    --primary: #225de8;
-    --primary-dark: #184ac4;
-    --teal: #0f766e;
-    --amber: #a16207;
-    --rose: #be123c;
-    --sky: #0284c7;
-    --shadow-sm: 0 14px 34px rgba(29, 78, 216, .065);
-    --shadow-md: 0 30px 76px rgba(29, 78, 216, .11);
-}
+@import './theme.css';
 
 body {
     min-height: 100vh;
@@ -1992,7 +1977,7 @@ a {
 
 .site-footer {
     border-top: 1px solid rgba(37, 99, 235, .1);
-    background: #fff;
+    background: var(--footer-bg);
     backdrop-filter: blur(14px);
 }
 
@@ -2724,6 +2709,54 @@ a {
 
     .footer-links {
         justify-content: flex-start;
+    }
+
+    .site-footer-grid {
+        gap: .85rem;
+        padding-top: 1rem;
+        padding-bottom: .65rem;
+    }
+
+    .footer-copy {
+        margin-top: .2rem;
+        font-size: .84rem;
+        line-height: 1.45;
+    }
+
+    .footer-socials {
+        gap: .4rem;
+        margin-top: .55rem;
+    }
+
+    .footer-socials span {
+        width: 1.45rem;
+        height: 1.45rem;
+    }
+
+    .footer-socials span .ui-icon {
+        width: .76rem;
+        height: .76rem;
+    }
+
+    .footer-column,
+    .footer-links {
+        gap: .28rem;
+    }
+
+    .footer-column strong {
+        margin-bottom: .08rem;
+        font-size: .84rem;
+    }
+
+    .footer-column a,
+    .footer-links a {
+        font-size: .84rem;
+        line-height: 1.35;
+    }
+
+    .footer-bottom {
+        padding: .2rem .75rem .75rem;
+        font-size: .78rem;
     }
 
     .admin-shell,
