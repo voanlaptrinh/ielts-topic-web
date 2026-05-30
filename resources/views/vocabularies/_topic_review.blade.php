@@ -35,24 +35,27 @@
             @forelse ($topicWords as $word)
                 <article class="vocabulary-topic-word" data-vocabulary-practice-card>
                     <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
-                        <h3 class="h5 mb-0">{{ $word->meaning_vi }}</h3>
-                        <span class="badge text-bg-success">{{ $word->level }}</span>
+                        <div>
+                            <h3 class="h5 mb-1">{{ $word->word }}</h3>
+                            <small>{{ $word->phonetic }} · {{ $word->part_of_speech }}</small>
+                        </div>
+                        <span class="vocabulary-level-pill">{{ $word->level }}</span>
                     </div>
                     <p class="text-muted mb-2">{{ $word->definition_en }}</p>
-                    <p class="mb-3">{{ $word->example_vi }}</p>
+                    <p class="vocabulary-topic-example mb-3">{{ $word->example_en }}</p>
 
-                    <label class="translate-box-label" for="practice-word-{{ $word->id }}">Nhập từ tiếng Anh</label>
+                    <label class="translate-box-label" for="practice-word-{{ $word->id }}">Nhập nghĩa tiếng Việt</label>
                     <div class="vocabulary-practice-answer">
                         <input
                             id="practice-word-{{ $word->id }}"
                             class="form-control"
                             type="text"
                             autocomplete="off"
-                            placeholder="Viết đáp án..."
+                            placeholder="Nhập nghĩa tiếng Việt..."
                             data-vocabulary-practice-input
-                            data-answer="{{ mb_strtolower($word->word) }}"
+                            data-answer="{{ mb_strtolower($word->meaning_vi) }}"
                         >
-                        <button class="btn btn-outline-primary btn-sm" type="button" data-vocabulary-practice-check>Kiểm tra</button>
+                        <button class="btn btn-primary btn-sm" type="button" data-vocabulary-practice-check>Kiểm tra</button>
                     </div>
 
                     <div class="vocabulary-practice-feedback" data-vocabulary-practice-feedback aria-live="polite"></div>

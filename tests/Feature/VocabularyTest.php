@@ -16,7 +16,7 @@ class VocabularyTest extends TestCase
     {
         $this->seed(VocabularySeeder::class);
 
-        $this->get('/vocabulary')->assertOk()->assertSee('Tra từ vựng IELTS theo kiểu nhanh');
+        $this->get('/vocabulary')->assertOk()->assertSee('Tra từ vựng IELTS nhanh');
         $this->get('/vocabulary/flashcards')->assertOk()->assertSee('Ôn từ bằng flashcard');
         $this->get('/vocabulary/quiz')->assertOk()->assertSee('Làm quiz từ vựng IELTS');
         $this->get('/vocabulary/sustainable')->assertOk()->assertSee('bền vững');
@@ -40,7 +40,7 @@ class VocabularyTest extends TestCase
             ->assertOk()
             ->assertSee('Ôn theo lĩnh vực')
             ->assertSee('Ôn từ theo topic')
-            ->assertSee('Nhập từ tiếng Anh')
+            ->assertSee('Nhập nghĩa tiếng Việt')
             ->assertSee('Kiểm tra')
             ->assertSee('Education')
             ->assertSee('allocate')
@@ -55,7 +55,7 @@ class VocabularyTest extends TestCase
             'X-Requested-With' => 'XMLHttpRequest',
         ])
             ->assertOk()
-            ->assertSee('Kết quả phù hợp nhất')
+            ->assertSee('Nghĩa tiếng Việt')
             ->assertSee('sustainable')
             ->assertDontSee('<html', false);
     }
