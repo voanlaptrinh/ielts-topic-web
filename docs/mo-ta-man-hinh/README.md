@@ -10,6 +10,7 @@ Các file:
 - `04-noi-dung-hoc.md`: Chủ đề, từ vựng, flashcards, quiz và từ điển.
 - `05-luyen-bai.md`: Reading, Listening, Writing, Speaking và lộ trình học.
 - `06-admin.md`: Toàn bộ màn hình quản trị.
+- `07-tu-vung.md`: Giao diện và chức năng chi tiết của trang Từ vựng.
 
 Khi cung cấp ảnh giao diện, nên đặt tên theo màn hình tương ứng, ví dụ:
 
