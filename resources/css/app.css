@@ -58,13 +58,11 @@ a {
 
 .app-shell {
     min-height: 100vh;
-    background:
-        radial-gradient(circle at 8% 0%, rgba(34, 93, 232, .04), transparent 34rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(238, 245, 255, .72) 100%);
+    background: transparent;
 }
 
 .container {
-    width: min(100% - clamp(1.5rem, 4vw, 3rem), 1680px);
+    width: calc(100% - clamp(1.5rem, 4vw, 3rem));
     max-width: none;
     padding-right: 0;
     padding-left: 0;
@@ -1994,9 +1992,7 @@ a {
 
 .site-footer {
     border-top: 1px solid rgba(37, 99, 235, .1);
-    background:
-        radial-gradient(circle at 8% 0%, rgba(37, 99, 235, .08), transparent 22rem),
-        linear-gradient(180deg, rgba(238, 245, 255, .72), rgba(226, 239, 255, .92));
+    background: rgba(255, 255, 255, .96);
     backdrop-filter: blur(14px);
 }
 
@@ -2873,7 +2869,7 @@ a {
 
 @media (max-width: 420px) {
     .home-hero-copy h1 {
-        max-width: 14rem;
+        max-width: 100%;
         font-size: 1.5rem;
     }
 
